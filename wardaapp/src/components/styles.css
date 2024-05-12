@@ -1,0 +1,9 @@
+.welcomeStyle{
+    background-color: red;
+    color: aliceblue;
+}
+.styleMe{
+    /* display: flex; */
+    margin:  auto;
+    text-align: center;
+}

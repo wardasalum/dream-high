@@ -1,0 +1,16 @@
+.home{
+    display:flex;
+
+    .homeContainer{
+       
+        flex:6 ;
+    }
+    .wi{
+        padding: 30px;
+        display: flex;
+        gap:60px;
+        border: 0;
+}
+    
+    }
+
