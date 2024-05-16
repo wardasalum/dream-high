@@ -24,22 +24,21 @@ const Sidebar1 = () => {
                     <p className='title'>ADMIN</p>
                     <li>
                         <PersonOutlineOutlinedIcon className='icon' />
-                        <span component={Link} to="/addadmin">Add admin</span>
+                        <span><Link to="/addadmin">Add admin</Link></span>
                     </li>
                     <li>
                         <PersonOutlineOutlinedIcon className='icon' />
-                        <span  Link='/viewadmin'>View admin</span>
-                       
+                        <span><Link to="/viewadmin">View admin</Link></span>
                     </li>
                    
                     <p className='title'>HUBS</p>
                     <li>
                         <PersonOutlineOutlinedIcon className='icon' />
-                        <span>add hubs</span>
+                        <span><Link to="/add hub">add hubs</Link></span>
                     </li>
                     <li>
                         <PersonOutlineOutlinedIcon className='icon' />
-                        <span>view hubs</span>
+                        <span><Link to="/view hub">view hubs</Link></span>
                     </li>
                     <p className='title'>USER</p>
                     <li>
