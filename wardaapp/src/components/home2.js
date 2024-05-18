@@ -5,7 +5,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 
-export default function ActionAreaCard() {
+export default function Home2() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#080808' ,fontSize:'30px', marginTop: '70px', background: '#eae8ec', padding: '20px' }}>
       <div>

@@ -24,7 +24,9 @@ function Registration() {
             <MDBInput wrapperClass='mb-3' label='Your Email' size='md' id='form2' type='email' name='email' />
             <MDBInput wrapperClass='mb-3' label='Password' size='md' id='form3' type='password' name='password' />
             <MDBInput wrapperClass='mb-3' label='Repeat your password' size='md' id='form4' type='password' name='rpswd' />
-            <MDBBtn className='mb-3 w-100 gradient-custom-4' size='md' type='submit'>Register</MDBBtn>
+            {/* <Link className='mb-3 w-100 gradient-custom-4' size='md' type='submit' to={'/'}>Register</Link> */}
+            
+            <Link className='btn btn-primary center my-2'  to ={'/'}> REGISTER</Link>
           </MDBCardBody>
         </MDBCard>
       </MDBContainer>
