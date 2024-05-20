@@ -1,0 +1,15 @@
+.table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin-right: 20px;
+    padding-right: 2px;
+  }
+  .small-table {
+    width: 100%; /* Adjust this percentage to change the table width */
+    font-size: 0.8rem; /* Adjust font size to make text smaller if needed */
+    padding-right: 2px;
+    padding-left: 3px;
+    margin-right: 20px;
+  }

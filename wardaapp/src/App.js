@@ -11,6 +11,9 @@ import Viewspecific from './components/Viewspecific';
 import Home from './components/Home';
 import Home2 from './components/home2';
 import Dashboard from './components/dashboard/Dashboard';
+import Addadmin from './components/admin/Addadmin';
+import Admintable from './components/admin/Admintable';
+import Editadmin from './components/admin/Editadmin';
 
 
 
@@ -37,10 +40,11 @@ function App() {
 
         <Route path="/edduser" element={<Edduser />} />
         <Route path="/edituser/:id" element={<Edituser />} />
-        <Route path="/addadmin" element={<Registration />} />
         <Route path="/viewuser" element={<ViewUser/>} />
         <Route path="/viewspecific" element={<Viewspecific />} />
-        <Route path="/add hub" element={<Registration />} />
+        <Route path="/addadmin" element={<Addadmin />} />
+        <Route path="/editadmin/:id" element={<Editadmin />} />
+        <Route path="/admintable" element={<Admintable />} />
         <Route path="/admindash" element={<Dashboard/>} />
         <Route path="/register" element={<Registration />} />
         <Route path="/login" element={<Login />} />

@@ -34,7 +34,7 @@ const Sidebar1 = () => {
                     <p className='title'>HUBS</p>
                     <li>
                         <PersonOutlineOutlinedIcon className='icon' />
-                        <span><Link to="/add hub">add hubs</Link></span>
+                        <span><Link to="/addhub">add hubs</Link></span>
                     </li>
                     <li>
                         <PersonOutlineOutlinedIcon className='icon' />

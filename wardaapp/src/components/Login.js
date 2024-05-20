@@ -20,9 +20,9 @@ function Login() {
           <MDBInput wrapperClass='mb-3' label='Your Email' size='md' id='form2' type='email'/> {/* Adjust wrapperClass and size */}
           <MDBInput wrapperClass='mb-3' label='Password' size='md' id='form3' type='password'/> {/* Adjust wrapperClass and size */}
           <MDBInput wrapperClass='mb-3' label='Repeat your password' size='md' id='form4' type='password'/> {/* Adjust wrapperClass and size */}
-   
-          {/* <MDBBtn className='mb-3 w-100 gradient-custom-4' size='md'>LOGIN</MDBBtn> Adjust margin bottom and size */}
-          <Link className='btn btn-primary center my-2'  to ={'/admindash'}> REGISTER</Link>
+          <div className='d-flex justify-content-center'>
+            <Link className='btn btn-primary my-2' to={'/admindash'}>LOGIN</Link>
+          </div>
         </MDBCardBody>
       </MDBCard>
     </MDBContainer>
