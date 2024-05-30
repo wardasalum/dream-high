@@ -55,7 +55,7 @@ export default function Editadmin() {
             <div className='mask gradient-custom-4'></div>
             <MDBCard className='m-9' style={{ maxWidth: '700px' }}>
               <MDBCardBody className='px-5 py-4'>
-            <h2 className="text-uppercase text-center mb-4"></h2>
+            <h2 className="text-uppercase text-center mb-4">EDIT ADMIN</h2>
             <MDBInput wrapperClass='mb-3' label='Lastname' size='md' id='form1' type='text' name='lastname' value={lastname} 
             onChange={(e)=>onInputChange(e)} />
               <MDBInput wrapperClass='mb-3' label='firstname' size='md' id='form2' type='text' name='firstname' value={firstname}

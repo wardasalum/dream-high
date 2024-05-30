@@ -3,6 +3,32 @@
     border-right: 0.5px solid rgb(230, 227, 227);
     min-height: 100vh;
     background-color: whitesmoke;
+    
+    
+    
+    .sidebar .center ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .sidebar .center ul .dropdown {
+        list-style: none;
+        padding: 0 0 0 20px; /* Indent dropdown items */
+    }
+    
+    .sidebar .center ul .dropdown li {
+        padding: 5px 0;
+    }
+    
+    .sidebar .center ul .dropdown li a {
+        color: inherit;
+        text-decoration: none;
+    }
+    
+    .sidebar .center ul .dropdown li a:hover {
+        text-decoration: underline;
+    }
+    
 
     .top {
    
@@ -41,7 +67,7 @@
         .title{
             font-size: 15px;
             font-weight: bold;
-            color:black;
+            color:rgb(100, 99, 102);
             margin-top: 15px;
         }
         li{

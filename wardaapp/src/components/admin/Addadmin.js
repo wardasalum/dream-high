@@ -23,7 +23,8 @@ export default function Addadmin() {
         lastname:" ",
         email:"",
         firstname:"",
-        school:" "
+        school:" ",
+       
     })
 
     const{lastname,email,firstname,school}=admin
@@ -45,21 +46,20 @@ export default function Addadmin() {
     <form onSubmit={(e)=>onSubmit(e)}>
     <MDBContainer fluid className='d-flex align-items-center justify-content-center bg-image' style={{ backgroundImage: 'url(https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp)', minHeight: '100vh' }}>
             <div className='mask gradient-custom-4'></div>
+
             <MDBCard className='m-9' style={{ maxWidth: '700px' }}>
               <MDBCardBody className='px-5 py-4'>
-            <h2 className="text-uppercase text-center mb-4"></h2>
-            <MDBInput wrapperClass='mb-3' label='Lastname' size='md' id='form1' type='text' name='lastname' value={lastname} 
+            <h2 className="text-uppercase text-center mb-4">ADD ADMIN</h2>
+            <MDBInput wrapperClass='mb-3' label='Lastname' size='md' id='form1' type='text' name='lastname' required value={lastname} 
             onChange={(e)=>onInputChange(e)} />
-              <MDBInput wrapperClass='mb-3' label='firstname' size='md' id='form2' type='text' name='firstname' value={firstname}
+              <MDBInput wrapperClass='mb-3' label='firstname' size='md' id='form2' type='text' name='firstname' required value={firstname}
              onChange={(e)=>onInputChange(e)} />
            
-              <MDBInput wrapperClass='mb-3' label='email' size='md' id='form4' type='email' name='email' value={email}
+              <MDBInput wrapperClass='mb-3' label='email' size='md' id='form4' type='email' name='email' required value={email}
              onChange={(e)=>onInputChange(e)} />
-           
-             
-            <MDBInput wrapperClass='mb-3' label='School' size='md' id='form3' type='text' name='school' value={school}
+             <MDBInput wrapperClass='mb-3' label='Hub' size='md' id='form3' type='text' name='school' required value={school}
              onChange={(e)=>onInputChange(e)} />
-           
+                   
            
            <Button className='mb-3 w-100 gradient-custom-4' size='md' type='button'  onClick={onSubmit}>ADD</Button>
             </MDBCardBody>
