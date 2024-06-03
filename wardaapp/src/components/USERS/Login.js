@@ -21,7 +21,7 @@ function Login() {
           <MDBInput wrapperClass='mb-3' label='Password' size='md' id='form3' type='password'/> {/* Adjust wrapperClass and size */}
           <MDBInput wrapperClass='mb-3' label='Repeat your password' size='md' id='form4' type='password'/> {/* Adjust wrapperClass and size */}
           <div className='d-flex justify-content-center'>
-            <Link className='btn btn-primary my-2' to={'/admindash'}>LOGIN</Link>
+            <Link className='btn btn-primary my-2' to={'/userdash'}>LOGIN</Link>
           </div>
         </MDBCardBody>
       </MDBCard>

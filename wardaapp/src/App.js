@@ -1,31 +1,27 @@
 import './App.css';
-
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'; // Import Routes
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Registration from './components/Registration';
-import Login from './components/Login';
-import ViewUser from './components/ViewUser'
-import Edduser from './components/Edduser';
-import Edituser from './components/Edituser';
-import Viewspecific from './components/Viewspecific';
-import Home from './components/Home';
-import Home2 from './components/home2';
-import Dashboard from './components/dashboard/Dashboard';
+import Registration from './components/USERS/Registration';
+import Login from './components/USERS/Login';
+import ViewUser from './components/USERS/ViewUser'
+import Edduser from './components/USERS/Edduser';
+import Edituser from './components/USERS/Edituser';
+import Viewspecific from './components/USERS/Viewspecific';
+import Home from './components/firstpage/Home'
+import Home2 from './components/firstpage/home2';
 import Addadmin from './components/admin/Addadmin';
 import Admintable from './components/admin/Admintable';
 import Editadmin from './components/admin/Editadmin';
-import Userdash from './components/Userdash';
-
-
-
-
-
-
-
+import Contact from './components/pages/ContactUs'
+import Footer from './components/Footer/Footer';
+import AboutUs from './components/pages/AboutUs';
+import ResponsiveDrawer from './components/admindash/Userdash'
+import Navbar from './components/firstpage/Navbar1';
+import Userdash from './components/admindash/Userdash'
 
 function App() {
   return (
-
     <Router>
       <Routes>
         <Route
@@ -36,26 +32,27 @@ function App() {
               <div style={{ marginTop: '0px' }}>
                 <Home2/> 
               </div>
+            <Footer/>
             </>
           }
         />
-
+       
+        <Route path="/about" element={<AboutUs />} />
         <Route path="/edduser" element={<Edduser />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/edituser/:id" element={<Edituser />} />
-        <Route path="/viewuser" element={<ViewUser/>} />
+        
         <Route path="/viewspecific" element={<Viewspecific />} />
         <Route path="/addadmin" element={<Addadmin />} />
         <Route path="/editadmin/:id" element={<Editadmin />} />
         <Route path="/admintable" element={<Admintable />} />
-        <Route path="/admindash" element={<Dashboard/>} />
+        <Route path="/userdash" element={<Userdash/>} />
         <Route path="/register" element={<Registration />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reg" element={<Login />} />
       </Routes>
     </Router>
-
   );
 }
 
 export default App;
-

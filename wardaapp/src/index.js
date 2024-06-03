@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { ProSidebarProvider } from "react-pro-sidebar";
 import { BrowserRouter as Router,Route,Routes} from 'react-router-dom';
 
-import PersistentDrawerRight from './components/Home';
+import PersistentDrawerRight from './components/firstpage/Home';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
