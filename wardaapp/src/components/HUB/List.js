@@ -27,6 +27,20 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Grid from "@mui/material/Grid"; // Add this line
+import { useNavigate, useParams } from 'react-router-dom';
+import {
+     Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+ 
+  } from '@mui/material';
+  import DeleteIcon from '@mui/icons-material/Delete';
+  import EditIcon from '@mui/icons-material/Edit';
 
 import {
     CollectionsBookmark,
@@ -41,36 +55,46 @@ import {
 
 const drawWidth = 220;
 
-function Userdash() {
+function  Hublist() {
     const [drawerOpen, setDrawerOpen] = React.useState(false);
     const [howToWriteOpen, setHowToWriteOpen] = React.useState(false);
     const [postsOpen, setPostsOpen] = React.useState(false);
     const [pickArticleOpen, setPickArticleOpen] = React.useState(false);
     const [improveOpen, setImproveOpen] = React.useState(false);
-    const [adminCount, setAdminCount] = useState(0);
-    const [hubCount, setHubCount] = useState(0); // Initialize hub count state
+    const { id } = useParams(); // Correctly extract id from URL params
 
-    useEffect(() => {
-        // Fetch the total number of admins from the backend API
-        axios.get("http://localhost:8080/admins")
-            .then(response => {
-                setAdminCount(response.data.length); // Set the total number of admins
-            })
-            .catch(error => {
-                console.error("Error fetching admin count:", error);
-            });
-    }, []);
+  const [hubs, setHubs] = useState([]);
+  const [hub, setHub] = useState({
+    name: "",
+    contact: "",
+    location: "",
+  });
 
-    useEffect(() => {
-        // Fetch the total number of hubs from the backend API
-        axios.get("http://localhost:8080/hubs")
-            .then(response => {
-                setHubCount(response.data.length); // Set the total number of hubs
-            })
-            .catch(error => {
-                console.error("Error fetching hub count:", error);
-            });
-    }, []);
+  useEffect(() => {
+    if (id) {
+      // If id exists, fetch the hub data
+      fetchHub(id);
+    }
+    loadHubs();
+  }, [id]);
+
+  // Fetch hub data by id
+  const fetchHub = async (id) => {
+    const response = await axios.get(`http://localhost:8080/hub/${id}`);
+    setHub(response.data);
+  };
+
+  // Load all hubs
+  const loadHubs = async () => {
+    const result = await axios.get("http://localhost:8080/hubs");
+    setHubs(result.data);
+  };
+  //for deletion
+  const deleteHub = async (id) => {
+    await axios.delete(`http://localhost:8080/hub/${id}`);
+    loadHubs();
+  };
+
 
     const handleToggle = () => {
         setDrawerOpen(!drawerOpen);
@@ -97,12 +121,12 @@ function Userdash() {
                     {howToWriteOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={howToWriteOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
+                <List component="div" disablePadding>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addadmin">
                             <ListItemText primary="ADD" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewadmin">
-                            <ListItemText primary="View" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
+                            <ListItemText primary="LIST" />
                         </ListItemButton>
                     </List>
                 </Collapse>
@@ -115,7 +139,7 @@ function Userdash() {
                     {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
+                <List component="div" disablePadding>
                     <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addadmin">
                             <ListItemText primary="ADD" />
                         </ListItemButton>
@@ -231,63 +255,39 @@ function Userdash() {
                     mt: 8, // Adjust margin top to create space for the app bar
                 }}
             >
-                <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                                    Hub Count
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Total Hubs {hubCount}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                            
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                   
-                </Grid>
-                <br></br> <br></br>
-                <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                              
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                  
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                                
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                   
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
+                <Grid container spacing={1} justifyContent="center">
+                <Grid item xs={12} sm={8}>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Location</TableCell>
+                <TableCell>Contact</TableCell>
+                      <TableCell>Actions</TableCell>
+                
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {hubs.map((hub, index) => (
+                <TableRow key={index}>
+                  <TableCell scope="row">{index + 1}</TableCell>
+                  <TableCell>{hub.name}</TableCell>
+                  <TableCell>{hub.location}</TableCell>
+                  <TableCell>{hub.contact}</TableCell>
+                  <TableCell>
+                      <IconButton color="error" onClick={() => deleteHub(hub.id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                      </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+    
                    
                 </Grid>
             </Box>
@@ -295,4 +295,4 @@ function Userdash() {
     );
 }
 
-export default Userdash;
+export default Hublist;

@@ -27,6 +27,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Grid from "@mui/material/Grid"; // Add this line
+import HubForm  from './Hubform'
 
 import {
     CollectionsBookmark,
@@ -115,7 +116,7 @@ function Userdash() {
                     {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
+                <List component="div" disablePadding>
                     <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addadmin">
                             <ListItemText primary="ADD" />
                         </ListItemButton>
@@ -231,64 +232,9 @@ function Userdash() {
                     mt: 8, // Adjust margin top to create space for the app bar
                 }}
             >
-                <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                                    Hub Count
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Total Hubs {hubCount}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                            
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                   
-                </Grid>
-                <br></br> <br></br>
-                <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                              
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                  
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                                
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                   
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                   
+                <Grid container spacing={1} justifyContent="center">
+               
+                   <HubForm/>
                 </Grid>
             </Box>
         </Box>

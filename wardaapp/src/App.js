@@ -19,6 +19,12 @@ import AboutUs from './components/pages/AboutUs';
 import ResponsiveDrawer from './components/admindash/Userdash'
 import Navbar from './components/firstpage/Navbar1';
 import Userdash from './components/admindash/Userdash'
+import Hubtable from './components/HUB/hubtable';
+import HubForm from './components/HUB/Hubform';
+
+import List from './components/HUB/List';
+
+
 
 function App() {
   return (
@@ -29,10 +35,10 @@ function App() {
           element={
             <>
               <Home/>
-              <div style={{ marginTop: '0px' }}>
+              {/* <div style={{ marginTop: '0px' }}>
                 <Home2/> 
               </div>
-            <Footer/>
+            <Footer/> */}
             </>
           }
         />
@@ -41,11 +47,10 @@ function App() {
         <Route path="/edduser" element={<Edduser />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/edituser/:id" element={<Edituser />} />
-        
         <Route path="/viewspecific" element={<Viewspecific />} />
-        <Route path="/addadmin" element={<Addadmin />} />
+        <Route path="/addadmin" element={<Hubtable />} />
         <Route path="/editadmin/:id" element={<Editadmin />} />
-        <Route path="/admintable" element={<Admintable />} />
+        <Route path="/hublist" element={<List/>} />
         <Route path="/userdash" element={<Userdash/>} />
         <Route path="/register" element={<Registration />} />
         <Route path="/login" element={<Login />} />

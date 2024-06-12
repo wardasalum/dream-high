@@ -15,11 +15,13 @@ function Login() {
       <div className='mask gradient-custom-4'></div>
       <MDBCard className='m-8' style={{maxWidth: '500px'}}> {/* Add margin top here */}
         <MDBCardBody className='px-5 py-4'> {/* Adjust padding here */}
+         <div>
+         <img src='/images/computer.png' alt="Computer" style={{ width: "60%", maxWidth: "200px", height: "70%" }} />
+         </div>
          
-          <MDBInput wrapperClass='mb-3' label='Your Name' size='md' id='form1' type='text'/> {/* Adjust wrapperClass and size */}
           <MDBInput wrapperClass='mb-3' label='Your Email' size='md' id='form2' type='email'/> {/* Adjust wrapperClass and size */}
           <MDBInput wrapperClass='mb-3' label='Password' size='md' id='form3' type='password'/> {/* Adjust wrapperClass and size */}
-          <MDBInput wrapperClass='mb-3' label='Repeat your password' size='md' id='form4' type='password'/> {/* Adjust wrapperClass and size */}
+        
           <div className='d-flex justify-content-center'>
             <Link className='btn btn-primary my-2' to={'/userdash'}>LOGIN</Link>
           </div>
