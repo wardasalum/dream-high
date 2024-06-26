@@ -26,7 +26,9 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import Grid from "@mui/material/Grid"; // Add this line
+import Grid from "@mui/material/Grid";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+
 
 import {
     CollectionsBookmark,
@@ -41,7 +43,7 @@ import {
 
 const drawWidth = 220;
 
-function Userdash() {
+function Dash() {
     const [drawerOpen, setDrawerOpen] = React.useState(false);
     const [howToWriteOpen, setHowToWriteOpen] = React.useState(false);
     const [postsOpen, setPostsOpen] = React.useState(false);
@@ -49,6 +51,7 @@ function Userdash() {
     const [improveOpen, setImproveOpen] = React.useState(false);
     const [adminCount, setAdminCount] = useState(0);
     const [hubCount, setHubCount] = useState(0); // Initialize hub count state
+    const [notifications, setNotifications] = useState([]);
 
     useEffect(() => {
         // Fetch the total number of admins from the backend API
@@ -70,6 +73,20 @@ function Userdash() {
             .catch(error => {
                 console.error("Error fetching hub count:", error);
             });
+    }, []);
+    // Simulate fetching notifications (replace with actual API call)
+    useEffect(() => {
+        // Example of fetching notifications
+        const fetchNotifications = async () => {
+            try {
+                const response = await axios.get("http://localhost:8080/notifications");
+                setNotifications(response.data.notifications); // Assuming the API returns an array of notifications
+            } catch (error) {
+                console.error("Error fetching notifications:", error);
+            }
+        };
+
+        fetchNotifications();
     }, []);
 
     const handleToggle = () => {
@@ -103,7 +120,7 @@ function Userdash() {
                     <ListItemIcon sx={{ color: "white" }}>
                         <UploadFile />
                     </ListItemIcon>
-                    <ListItemText primary="Hub Management" />
+                    <ListItemText primary="Resources" />
                     {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
@@ -137,7 +154,7 @@ function Userdash() {
                     <ListItemIcon sx={{ color: "white" }}>
                         <Edit />
                     </ListItemIcon>
-                    <ListItemText primary="Reports and Analytics" />
+                    <ListItemText primary="Schools" />
                     {improveOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={improveOpen} timeout="auto" unmountOnExit>
@@ -167,16 +184,9 @@ function Userdash() {
                         </ListItemButton>
                     </List>
                 </Collapse>
-            </List>
+            </List> 
             <Divider />
-            <List>
-                <ListItemButton sx={{ color: "white" }}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <Feedback />
-                    </ListItemIcon>
-                    <ListItemText primary="Contact us" />
-                </ListItemButton>
-            </List>
+          
             <Typography
                 sx={{
                     backgroundColor: "blue",
@@ -187,7 +197,7 @@ function Userdash() {
                     margin: 2,
                 }}
             >
-                Sign In
+                Logout
             </Typography>
         </div>
     );
@@ -211,9 +221,13 @@ function Userdash() {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6">
+                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
                         Dashboard
                     </Typography>
+                        {/* Notifications dropdown */}
+                        <IconButton color="inherit">
+                        <NotificationsIcon />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -303,5 +317,4 @@ function Userdash() {
         </Box>
     );
 }
-
-export default Userdash;
+export default Dash;

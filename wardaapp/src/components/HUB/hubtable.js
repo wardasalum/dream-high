@@ -90,29 +90,38 @@ function Userdash() {
             <Divider />
 
             <List sx={{ backgroundColor: "#09212E" }}>
-                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setHowToWriteOpen)}>
+              <ListItemButton component={Link} to="/userdash" sx={{ color: "white" }}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <SupervisorAccountRoundedIcon />
                     </ListItemIcon>
                     <ListItemText primary="Overview Section" />
-                    {howToWriteOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
-                <Collapse in={howToWriteOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addadmin">
-                            <ListItemText primary="ADD" />
-                        </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewadmin">
-                            <ListItemText primary="View" />
-                        </ListItemButton>
-                    </List>
-                </Collapse>
+                
+                
                 
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <UploadFile />
                     </ListItemIcon>
                     <ListItemText primary="Hub Management" />
+                    {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
+                </ListItemButton>
+                <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addadmin">
+                            <ListItemText primary="ADD" />
+                        </ListItemButton>
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
+                            <ListItemText primary="View" />
+                        </ListItemButton>  
+                    </List>
+                </Collapse>
+
+                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
+                    <ListItemIcon sx={{ color: "white" }}>
+                        <UploadFile />
+                    </ListItemIcon>
+                    <ListItemText primary="Upcoming activities" />
                     {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>

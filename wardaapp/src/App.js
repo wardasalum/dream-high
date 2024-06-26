@@ -21,9 +21,9 @@ import Navbar from './components/firstpage/Navbar1';
 import Userdash from './components/admindash/Userdash'
 import Hubtable from './components/HUB/hubtable';
 import HubForm from './components/HUB/Hubform';
-
 import List from './components/HUB/List';
-
+import Dash from './components/userdash/dashboard';
+import ResourceAdd from './components/Resource/ResourceAdd';
 
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
           path="/"
           element={
             <>
-              <Home/>
+              <ResourceAdd/>
               {/* <div style={{ marginTop: '0px' }}>
                 <Home2/> 
               </div>
@@ -44,7 +44,7 @@ function App() {
         />
        
         <Route path="/about" element={<AboutUs />} />
-        <Route path="/edduser" element={<Edduser />} />
+         <Route path="/edduser" element={<Edduser />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/edituser/:id" element={<Edituser />} />
         <Route path="/viewspecific" element={<Viewspecific />} />
@@ -52,7 +52,7 @@ function App() {
         <Route path="/editadmin/:id" element={<Editadmin />} />
         <Route path="/hublist" element={<List/>} />
         <Route path="/userdash" element={<Userdash/>} />
-        <Route path="/register" element={<Registration />} />
+        <Route path="/signup" element={<Registration />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reg" element={<Login />} />
       </Routes>
