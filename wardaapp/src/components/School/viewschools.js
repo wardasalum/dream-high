@@ -42,7 +42,7 @@ import { CollectionsBookmark, Edit, Feedback, ForkLeft, Help, PermMedia, UploadF
 
 const drawWidth = 220;
 
-function ResourceView() {
+function SchoolView() {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [howToWriteOpen, setHowToWriteOpen] = useState(false);
     const [postsOpen, setPostsOpen] = useState(false);
@@ -50,11 +50,13 @@ function ResourceView() {
     const [improveOpen, setImproveOpen] = useState(false);
     const { id } = useParams(); // Correctly extract id from URL params
 
-    const [resources, setResources] = useState([]);
-    const [resource, setResource] = useState({
+    const [schools, setSchools] = useState([]);
+    const [school, setSchool] = useState({
+        category: "",
         name: "",
-        contact: "",
-        location: "",
+       number_females: "",
+       number_males : ""
+      
     });
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -62,27 +64,27 @@ function ResourceView() {
     useEffect(() => {
         if (id) {
             // If id exists, fetch the hub data
-            fetchResource(id);
+            fetchSchool(id);
         }
-        loadResources();
+        loadSchools();
     }, [id]);
 
     // Fetch resource data by id
-    const fetchResource = async (id) => {
-        const response = await axios.get(`http://localhost:8080/resource/${id}`);
-        setResource(response.data);
+    const fetchSchool = async (id) => {
+        const response = await axios.get(`http://localhost:8080/school/${id}`);
+        setSchool(response.data);
     };
 
     // Load all resources
-    const loadResources = async () => {
-        const result = await axios.get("http://localhost:8080/resources");
-        setResources(result.data);
+    const loadSchools = async () => {
+        const result = await axios.get("http://localhost:8080/schools");
+        setSchools(result.data);
     };
 
     // Delete resource
-    const deleteResource = async (id) => {
-        await axios.delete(`http://localhost:8080/resource/${id}`);
-        loadResources();
+    const deleteSchool = async (id) => {
+        await axios.delete(`http://localhost:8080/school/${id}`);
+        loadSchools();
     };
 
     // Handle search term change
@@ -90,9 +92,9 @@ function ResourceView() {
         setSearchTerm(event.target.value);
     };
 
-    // Filter resources based on search term
-    const filteredResources = resources.filter((resource) =>
-        resource.name.toLowerCase().includes(searchTerm.toLowerCase())
+    // Filter schools based on search term
+    const filteredSchools = schools.filter((school) =>
+        school.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleToggle = () => {
@@ -112,7 +114,7 @@ function ResourceView() {
             <Divider />
 
             <List sx={{ backgroundColor: "#09212E" }}>
-                <ListItemButton component={Link} to="/dash" sx={{ color: "white" }}>
+                <ListItemButton  component={Link} to="/dash" sx={{ color: "white" }}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <SupervisorAccountRoundedIcon />
                     </ListItemIcon>
@@ -162,8 +164,8 @@ function ResourceView() {
                 </ListItemButton>
                 <Collapse in={postsOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
-                            <ListItemText primary="add school" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addschool">
+                            <ListItemText primary="add School" />
                         </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewSChool">
                             <ListItemText primary="view school" />
@@ -263,20 +265,23 @@ function ResourceView() {
                                     <TableRow>
                                         <TableCell>ID</TableCell>
                                         <TableCell>Name</TableCell>
-                                        <TableCell>Type</TableCell>
-                                        <TableCell>Total</TableCell>
-                                        <TableCell>Action</TableCell>
+                                        <TableCell>Category</TableCell>
+                                        <TableCell>Male</TableCell>
+                                        <TableCell>Female</TableCell>
+                                        <TableCell>ACTION</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {filteredResources.map((resource, index) => (
+                                    {filteredSchools.map((school, index) => (
                                         <TableRow key={index}>
                                             <TableCell scope="row">{index + 1}</TableCell>
-                                            <TableCell>{resource.name}</TableCell>
-                                            <TableCell>{resource.type}</TableCell>
-                                            <TableCell>{resource.total}</TableCell>
+                                            <TableCell>{school.name}</TableCell>
+                                            <TableCell>{school.category}</TableCell>
+                                            <TableCell>{school.number_males}</TableCell>
+                                            <TableCell>{school. number_females}</TableCell>
+
                                             <TableCell>
-                                                <IconButton color="error" onClick={() => deleteResource(resource.id)}>
+                                                <IconButton color="error" onClick={() => deleteSchool(school.id)}>
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </TableCell>
@@ -292,4 +297,4 @@ function ResourceView() {
     );
 }
 
-export default ResourceView;
+export default SchoolView;

@@ -49,29 +49,29 @@ function Dash() {
     const [postsOpen, setPostsOpen] = React.useState(false);
     const [pickArticleOpen, setPickArticleOpen] = React.useState(false);
     const [improveOpen, setImproveOpen] = React.useState(false);
-    const [adminCount, setAdminCount] = useState(0);
-    const [hubCount, setHubCount] = useState(0); // Initialize hub count state
+    const [resourceCount, setResourceCount] = useState(0);
+    const [schoolCount, setSchoolCount] = useState(0); // Initialize hub count state
     const [notifications, setNotifications] = useState([]);
 
     useEffect(() => {
         // Fetch the total number of admins from the backend API
-        axios.get("http://localhost:8080/admins")
+        axios.get("http://localhost:8080/resources")
             .then(response => {
-                setAdminCount(response.data.length); // Set the total number of admins
+                setResourceCount (response.data.length); // Set the total number of resource
             })
             .catch(error => {
-                console.error("Error fetching admin count:", error);
+                console.error("Error fetching resoiurce count:", error);
             });
     }, []);
 
     useEffect(() => {
-        // Fetch the total number of hubs from the backend API
-        axios.get("http://localhost:8080/hubs")
+        // Fetch the total number of schools from the backend API
+        axios.get("http://localhost:8080/schools")
             .then(response => {
-                setHubCount(response.data.length); // Set the total number of hubs
+                setSchoolCount(response.data.length); // Set the total number of schools
             })
             .catch(error => {
-                console.error("Error fetching hub count:", error);
+                console.error("Error fetching school count:", error);
             });
     }, []);
     // Simulate fetching notifications (replace with actual API call)
@@ -110,7 +110,7 @@ function Dash() {
                     <ListItemIcon sx={{ color: "white" }}>
                         <SupervisorAccountRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Overview Section" component={Link} to="/userdash"/>
+                    <ListItemText primary="Overview Section" component={Link} to="/dash"/>
                    
                 </ListItemButton>
                 
@@ -125,11 +125,17 @@ function Dash() {
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addadmin">
+                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/resrcadd">
                             <ListItemText primary="ADD" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/ResurceView">
                             <ListItemText primary="View" />
+                        </ListItemButton>  
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/requestsend">
+                            <ListItemText primary="Send request" />
+                        </ListItemButton>  
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguest">
+                            <ListItemText primary="ViewRequest" />
                         </ListItemButton>  
                     </List>
                 </Collapse>
@@ -159,11 +165,12 @@ function Dash() {
                 </ListItemButton>
                 <Collapse in={improveOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve1">
-                            <ListItemText primary="Improve 1" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addschool">
+                            <ListItemText primary="Add School" />
+                          
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve2">
-                            <ListItemText primary="Improve 2" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewSChool" >
+                            <ListItemText primary="View school" />
                         </ListItemButton>
                     </List>
                 </Collapse>
@@ -258,12 +265,12 @@ function Dash() {
                     <Grid item xs={12} sm={6} md={4}>
                         <Card sx={{ maxWidth: 250, margin: "auto" }}>
                             <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
+                                <img src='/images/graduation-cap.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
                                 <Typography gutterBottom variant="h5" component="div">
-                                    Hub Count
+                                    School
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    Total Hubs {hubCount}
+                                    Total:   {schoolCount}
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -271,12 +278,12 @@ function Dash() {
                     <Grid item xs={12} sm={6} md={4}>
                         <Card sx={{ maxWidth: 250, margin: "auto" }}>
                             <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
+                                <img src='/images/school.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
                                 <Typography gutterBottom variant="h5" component="div">
-                            
+                               Resource
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    
+                                 Total:   {resourceCount}
                                 </Typography>
                             </CardContent>
                         </Card>

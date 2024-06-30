@@ -42,7 +42,7 @@ import { CollectionsBookmark, Edit, Feedback, ForkLeft, Help, PermMedia, UploadF
 
 const drawWidth = 220;
 
-function ResourceView() {
+function RequestView() {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [howToWriteOpen, setHowToWriteOpen] = useState(false);
     const [postsOpen, setPostsOpen] = useState(false);
@@ -50,11 +50,11 @@ function ResourceView() {
     const [improveOpen, setImproveOpen] = useState(false);
     const { id } = useParams(); // Correctly extract id from URL params
 
-    const [resources, setResources] = useState([]);
-    const [resource, setResource] = useState({
-        name: "",
-        contact: "",
-        location: "",
+    const [requests, setRequests] = useState([]);
+    const [request, setRequest] = useState({
+        description: "",
+        name:"",
+        quantity: ""
     });
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -62,27 +62,27 @@ function ResourceView() {
     useEffect(() => {
         if (id) {
             // If id exists, fetch the hub data
-            fetchResource(id);
+            fetchRequest(id);
         }
-        loadResources();
+        loadRequests();
     }, [id]);
 
     // Fetch resource data by id
-    const fetchResource = async (id) => {
-        const response = await axios.get(`http://localhost:8080/resource/${id}`);
-        setResource(response.data);
+    const  fetchRequest = async (id) => {
+        const response = await axios.get(`http://localhost:8080/request/${id}`);
+        setRequest(response.data);
     };
 
     // Load all resources
-    const loadResources = async () => {
-        const result = await axios.get("http://localhost:8080/resources");
-        setResources(result.data);
+    const loadRequests = async () => {
+        const result = await axios.get("http://localhost:8080/requests");
+        setRequests(result.data);
     };
 
     // Delete resource
-    const deleteResource = async (id) => {
-        await axios.delete(`http://localhost:8080/resource/${id}`);
-        loadResources();
+    const deleteRequest = async (id) => {
+        await axios.delete(`http://localhost:8080/request/${id}`);
+        loadRequests();
     };
 
     // Handle search term change
@@ -91,8 +91,8 @@ function ResourceView() {
     };
 
     // Filter resources based on search term
-    const filteredResources = resources.filter((resource) =>
-        resource.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredRequests = requests.filter((request) =>
+        request.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleToggle = () => {
@@ -102,7 +102,15 @@ function ResourceView() {
     const handleDropdownToggle = (setDropdownOpen) => {
         setDropdownOpen((prevState) => !prevState);
     };
-
+    const handleApprove = async (id) => {
+        try {
+          const response = await axios.put(`http://localhost:8080/requests/${id}/approve`);
+          console.log('Request approved:', response.data);
+          // Optionally, update the local state to reflect the change
+        } catch (error) {
+          console.error('Error approving request:', error);
+        }
+      };
     const responsiveDrawer = (
         <div style={{ backgroundColor: "#09212E", height: "100%" }}>
             <Toolbar />
@@ -134,6 +142,12 @@ function ResourceView() {
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/ResurceView">
                             <ListItemText primary="View" />
                         </ListItemButton>
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/requestsend">
+                            <ListItemText primary="Send request" />
+                        </ListItemButton>  
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguest">
+                            <ListItemText primary="ViewRequest" />
+                        </ListItemButton> 
                     </List>
                 </Collapse>
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setImproveOpen)}>
@@ -263,20 +277,22 @@ function ResourceView() {
                                     <TableRow>
                                         <TableCell>ID</TableCell>
                                         <TableCell>Name</TableCell>
-                                        <TableCell>Type</TableCell>
-                                        <TableCell>Total</TableCell>
+                                        <TableCell>Description</TableCell>
+                                        <TableCell>quantity</TableCell>
+                                        <TableCell>status</TableCell>
                                         <TableCell>Action</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {filteredResources.map((resource, index) => (
+                                    {filteredRequests.map((request, index) => (
                                         <TableRow key={index}>
                                             <TableCell scope="row">{index + 1}</TableCell>
-                                            <TableCell>{resource.name}</TableCell>
-                                            <TableCell>{resource.type}</TableCell>
-                                            <TableCell>{resource.total}</TableCell>
+                                            <TableCell>{request.name}</TableCell>
+                                            <TableCell>{request.description}</TableCell>
+                                            <TableCell>{request.quantity}</TableCell>
+                                            <TableCell>{request.status}</TableCell>
                                             <TableCell>
-                                                <IconButton color="error" onClick={() => deleteResource(resource.id)}>
+                                                <IconButton color="error" onClick={() => deleteRequest(request.id)}>
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </TableCell>
@@ -292,4 +308,4 @@ function ResourceView() {
     );
 }
 
-export default ResourceView;
+export default RequestView;

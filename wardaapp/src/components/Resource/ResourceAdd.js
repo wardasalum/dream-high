@@ -13,18 +13,18 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 
-export default function Addadmin() {
+export default function Addresource() {
     let navigate = useNavigate();
     const { id } = useParams();
 
-    const [admin, setAdmin] = useState({
+    const [resource, setResource] = useState({
         type: "",
         name: "",
         total: ""
         
     });
 
-    const { type,name, total } = admin;
+    const { type,name, total } = resource;
 
     const typeOptions = [
         'resources',
@@ -34,7 +34,7 @@ export default function Addadmin() {
 
 
     const onInputChange = (e) => {
-        setAdmin({ ...admin, [e.target.name]: e.target.value });
+        setResource({ ...resource, [e.target.name]: e.target.value });
     };
 
     const onSubmit = async (e) => {
@@ -44,8 +44,20 @@ export default function Addadmin() {
             alert("Please fill in all fields");
             return;
         }
-        await axios.post("http://localhost:8080/admin", admin);
-        navigate("/admintable");
+        try {
+            await axios.post("http://localhost:8080/resource", resource);
+            // After successful submission, clear the form fields
+            setResource({
+                type: "",
+                name: "",
+                total: ""
+            });
+            alert("Resource added successfully!");
+            navigate("/ResurceView");
+        } catch (error) {
+            console.error("Error adding resource: ", error);
+            alert("Failed to add resource. Please try again.");
+        }
     };
 
     return (
@@ -64,7 +76,7 @@ export default function Addadmin() {
                                 className='form-select'
                                 id='type'
                                 name='type'
-                                value={admin.type}
+                                value={resource.type}
                                 onChange={onInputChange}
                                 required
                             >
@@ -75,7 +87,7 @@ export default function Addadmin() {
                             </select>
                         </div>
 
-                            <MDBInput wrapperClass='mb-3' label='Name' size='md' id='form4' type='email' name='name' required value={name}
+                            <MDBInput wrapperClass='mb-3' label='Name' size='md' id='form4' type='text' name='name' required value={name}
                                 onChange={(e) => onInputChange(e)} />
 
                             <MDBInput wrapperClass='mb-3' label='Total' size='md' id='form2' type='text' name='total' required value={total}

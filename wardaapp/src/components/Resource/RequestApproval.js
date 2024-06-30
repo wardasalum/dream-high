@@ -22,64 +22,107 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import Button from '@mui/material/Button';
+import CheckIcon from '@mui/icons-material/Check';
 import ExpandLess from "@mui/icons-material/ExpandLess";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import Grid from "@mui/material/Grid"; // Add this line
-
+import Grid from "@mui/material/Grid";
+import { useNavigate, useParams } from 'react-router-dom';
 import {
-    CollectionsBookmark,
-    Edit,
-    Feedback,
-    ForkLeft,
-    Help,
-    PermMedia,
-    UploadFile,
-    Work,
-} from "@mui/icons-material";
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { CollectionsBookmark, Edit, Feedback, ForkLeft, Help, PermMedia, UploadFile, Work, Clear } from "@mui/icons-material"; // Import Clear from '@mui/icons-material'
 
 const drawWidth = 220;
 
-function Userdash() {
-    const [drawerOpen, setDrawerOpen] = React.useState(false);
-    const [howToWriteOpen, setHowToWriteOpen] = React.useState(false);
-    const [postsOpen, setPostsOpen] = React.useState(false);
-    const [pickArticleOpen, setPickArticleOpen] = React.useState(false);
-    const [improveOpen, setImproveOpen] = React.useState(false);
-    const [adminCount, setAdminCount] = useState(0);
-    const [hubCount, setHubCount] = useState(0); // Initialize hub count state
+function RequestApproval() {
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [howToWriteOpen, setHowToWriteOpen] = useState(false);
+    const [postsOpen, setPostsOpen] = useState(false);
+    const [pickArticleOpen, setPickArticleOpen] = useState(false);
+    const [improveOpen, setImproveOpen] = useState(false);
+    const { id } = useParams(); // Correctly extract id from URL params
+
+    const [requests, setRequests] = useState([]);
+    const [request, setRequest] = useState({
+        description: "",
+        name: "",
+        quantity: ""
+    });
+
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
-        // Fetch the total number of admins from the backend API
-        axios.get("http://localhost:8080/")
-            .then(response => {
-                setAdminCount(response.data.length); // Set the total number of admins
-            })
-            .catch(error => {
-                console.error("Error fetching admin count:", error);
-            });
-    }, []);
+        if (id) {
+            // If id exists, fetch the hub data
+            fetchRequest(id);
+        }
+        loadRequests();
+    }, [id]);
 
-    useEffect(() => {
-        // Fetch the total number of hubs from the backend API
-        axios.get("http://localhost:8080/hubs")
-            .then(response => {
-                setHubCount(response.data.length); // Set the total number of hubs
-            })
-            .catch(error => {
-                console.error("Error fetching hub count:", error);
-            });
-    }, []);
+    // Fetch resource data by id
+    const fetchRequest = async (id) => {
+        const response = await axios.get(`http://localhost:8080/request/${id}`);
+        setRequest(response.data);
+    };
+
+    // Load all resources
+    const loadRequests = async () => {
+        const result = await axios.get("http://localhost:8080/requests");
+        setRequests(result.data);
+    };
+
+    // Delete resource
+    const deleteRequest = async (id) => {
+        await axios.delete(`http://localhost:8080/request/${id}`);
+        loadRequests();
+    };
+
+    // Handle search term change
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    // Filter resources based on search term
+    const filteredRequests = requests.filter((request) =>
+        request.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const handleToggle = () => {
         setDrawerOpen(!drawerOpen);
     };
 
     const handleDropdownToggle = (setDropdownOpen) => {
-        setDropdownOpen(prevState => !prevState);
+        setDropdownOpen((prevState) => !prevState);
     };
 
+    const handleApprove = async (id) => {
+        try {
+            const response = await axios.put(`http://localhost:8080/requests/${id}/approve`);
+            console.log('Request approved:', response.data);
+            // Update local state to reflect the change
+            setRequests(prevRequests => {
+                return prevRequests.map(request => {
+                    if (request.id === id) {
+                        return { ...request, status: 'APPROVED' }; // Update status locally
+                    }
+                    return request;
+                });
+             
+            });
+        } catch (error) {
+            console.error('Error approving request:', error);
+        }
+    };
     const responsiveDrawer = (
         <div style={{ backgroundColor: "#09212E", height: "100%" }}>
             <Toolbar />
@@ -87,7 +130,7 @@ function Userdash() {
                 <img src='/images/computer.png' alt="Computer" style={{ width: "60%", maxWidth: "200px", height: "75%" }} />
             </Box>
             <Divider />
-
+       
             <List sx={{ backgroundColor: "#09212E" }}>
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setHowToWriteOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
@@ -114,8 +157,8 @@ function Userdash() {
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
                             <ListItemText primary="View" />
                         </ListItemButton> 
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="reguestapprv">
-                            <ListItemText primary="Request list" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguest">
+                            <ListItemText primary="Request" />
                         </ListItemButton>   
                     </List>
                 </Collapse>
@@ -180,6 +223,7 @@ function Userdash() {
                     <ListItemText primary="Contact us" />
                 </ListItemButton>
             </List>
+         
             <Typography
                 sx={{
                     backgroundColor: "blue",
@@ -243,72 +287,72 @@ function Userdash() {
                     mt: 8, // Adjust margin top to create space for the app bar
                 }}
             >
-                <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                                    Hub Count
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Total Hubs {hubCount}
-                                </Typography>
-                            </CardContent>
-                        </Card>
+                <Grid container spacing={1} justifyContent="center">
+                    <Grid item xs={12} sm={8}>
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                            <TextField
+                                label="Search by Name"
+                                variant="outlined"
+                                size="small"
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                            />
+                            <IconButton color="primary" onClick={() => setSearchTerm("")}>
+                                <Clear />
+                            </IconButton>
+                        </Box>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>ID</TableCell>
+                                        <TableCell>Name</TableCell>
+                                        <TableCell>Description</TableCell>
+                                        <TableCell>quantity</TableCell>
+                                        <TableCell>status</TableCell>
+                                        <TableCell>Action</TableCell>
+
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {filteredRequests.map((request, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell scope="row">{index + 1}</TableCell>
+                                            <TableCell>{request.name}</TableCell>
+                                            <TableCell>{request.description}</TableCell>
+                                            <TableCell>{request.quantity}</TableCell>
+                                            <TableCell>{request.status}</TableCell>
+
+                                            {request.status === 'PENDING' && (
+                                                <div>
+                                                <Button
+                         variant="contained"
+                          color="primary"
+                        onClick={() => handleApprove(request.id)}
+                       
+                >
+                  Approve
+                </Button>
+              </div>
+                    )}
+
+                                            <TableCell>
+                                                <IconButton color="error" onClick={() => deleteRequest(request.id)}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                            
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                   
-                </Grid>
-                <br></br> <br></br>
-                <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                              
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                  
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                                
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                   
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                   
                 </Grid>
             </Box>
         </Box>
     );
 }
 
-export default Userdash;
-
-
+export default RequestApproval;
 
 
