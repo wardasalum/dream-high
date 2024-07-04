@@ -119,10 +119,21 @@ function RequestApproval() {
                 });
              
             });
-        } catch (error) {
-            console.error('Error approving request:', error);
-        }
-    };
+            
+
+           // Send notification to Dash page
+           const newNotification = {
+            id: Date.now(), // Generate a unique id for the notification
+            message: `Request ${id} has been approved.`,
+            timestamp: new Date().toLocaleString(),
+        };
+        axios.post('http://localhost:8080/notifications', newNotification)
+            .then(() => console.log('Notification sent to Dash page'))
+            .catch(error => console.error('Error sending notification:', error));
+    } catch (error) {
+        console.error('Error approving request:', error);
+    }
+};
     const responsiveDrawer = (
         <div style={{ backgroundColor: "#09212E", height: "100%" }}>
             <Toolbar />
@@ -340,6 +351,7 @@ function RequestApproval() {
                                                 <IconButton color="error" onClick={() => deleteRequest(request.id)}>
                                                     <DeleteIcon />
                                                 </IconButton>
+                                             
                                             </TableCell>
                                         </TableRow>
                                     ))}

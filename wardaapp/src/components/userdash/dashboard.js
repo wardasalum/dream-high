@@ -7,6 +7,8 @@ import {
     Link,
 } from "react-router-dom";
 import axios from "axios";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import Badge from "@mui/material/Badge"; // Add Badge import
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Collapse from "@mui/material/Collapse";
@@ -27,7 +29,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Grid from "@mui/material/Grid";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+
 
 
 import {
@@ -50,14 +52,21 @@ function Dash() {
     const [pickArticleOpen, setPickArticleOpen] = React.useState(false);
     const [improveOpen, setImproveOpen] = React.useState(false);
     const [resourceCount, setResourceCount] = useState(0);
-    const [schoolCount, setSchoolCount] = useState(0); // Initialize hub count state
+    const [schoolCount, setSchoolCount] = useState(0);
+    const [activityCount, setActivityCount] = useState(0);
+    const [showActivityAddedPopup, setShowActivityAddedPopup] = useState(false);
     const [notifications, setNotifications] = useState([]);
+
+    const handleNotificationsClick = () => {
+        // Handle click logic for notifications
+        console.log('Notifications clicked!');
+    };
 
     useEffect(() => {
         // Fetch the total number of admins from the backend API
         axios.get("http://localhost:8080/resources")
             .then(response => {
-                setResourceCount (response.data.length); // Set the total number of resource
+                setResourceCount(response.data.length); // Set the total number of resource
             })
             .catch(error => {
                 console.error("Error fetching resoiurce count:", error);
@@ -74,20 +83,33 @@ function Dash() {
                 console.error("Error fetching school count:", error);
             });
     }, []);
-    // Simulate fetching notifications (replace with actual API call)
-    useEffect(() => {
-        // Example of fetching notifications
-        const fetchNotifications = async () => {
-            try {
-                const response = await axios.get("http://localhost:8080/notifications");
-                setNotifications(response.data.notifications); // Assuming the API returns an array of notifications
-            } catch (error) {
-                console.error("Error fetching notifications:", error);
-            }
-        };
 
+    useEffect(() => {
+        // Fetch the total number of activity from the backend API
+        axios.get("http://localhost:8080/activities")
+            .then(response => {
+                setActivityCount(response.data.length); // Set the total number of schools
+            })
+            .catch(error => {
+                console.error("Error fetching activity count:", error);
+            });
+    }, []);
+
+
+
+    useEffect(() => {
         fetchNotifications();
     }, []);
+
+    const fetchNotifications = () => {
+        axios.get("http://localhost:8080/notifications")
+            .then(response => {
+                setNotifications(response.data);
+            })
+            .catch(error => {
+                console.error("Error fetching notifications:", error);
+            });
+    };
 
     const handleToggle = () => {
         setDrawerOpen(!drawerOpen);
@@ -110,12 +132,12 @@ function Dash() {
                     <ListItemIcon sx={{ color: "white" }}>
                         <SupervisorAccountRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Overview Section" component={Link} to="/dash"/>
-                   
+                    <ListItemText primary="Overview Section" component={Link} to="/dash" />
+
                 </ListItemButton>
-                
-                  
-                
+
+
+
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <UploadFile />
@@ -125,37 +147,21 @@ function Dash() {
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/resrcadd">
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/resrcadd">
                             <ListItemText primary="ADD" />
                         </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/ResurceView">
                             <ListItemText primary="View" />
-                        </ListItemButton>  
+                        </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/requestsend">
                             <ListItemText primary="Send request" />
-                        </ListItemButton>  
+                        </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguest">
                             <ListItemText primary="ViewRequest" />
-                        </ListItemButton>  
-                    </List>
-                </Collapse>
-                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <UploadFile />
-                    </ListItemIcon>
-                    <ListItemText primary="Upcoming activities" />
-                    {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
-                </ListItemButton>
-                <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addadmin">
-                            <ListItemText primary="ADD" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
-                            <ListItemText primary="View" />
-                        </ListItemButton>  
                     </List>
                 </Collapse>
+
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setImproveOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <Edit />
@@ -167,7 +173,7 @@ function Dash() {
                     <List component="div" disablePadding>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addschool">
                             <ListItemText primary="Add School" />
-                          
+
                         </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewSChool" >
                             <ListItemText primary="View school" />
@@ -178,22 +184,22 @@ function Dash() {
                     <ListItemIcon sx={{ color: "white" }}>
                         <SchoolRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Event and Activity Management" />
+                    <ListItemText primary="Upcoming activities" />
                     {postsOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={postsOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
-                            <ListItemText primary="add hub" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/activityadd">
+                            <ListItemText primary="addactivity" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewhub">
-                            <ListItemText primary="view hub" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/activityview" >
+                            <ListItemText primary="viewactivity" />
                         </ListItemButton>
                     </List>
                 </Collapse>
-            </List> 
+            </List>
             <Divider />
-          
+
             <Typography
                 sx={{
                     backgroundColor: "blue",
@@ -231,9 +237,14 @@ function Dash() {
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
                         Dashboard
                     </Typography>
-                        {/* Notifications dropdown */}
-                        <IconButton color="inherit">
-                        <NotificationsIcon />
+                    <IconButton color="inherit">
+
+                        <IconButton color="inherit" onClick={handleNotificationsClick}>
+                            <Badge badgeContent={notifications.length} color="secondary">
+                                <NotificationsIcon />
+                            </Badge>
+                        </IconButton>
+
                     </IconButton>
                 </Toolbar>
             </AppBar>
@@ -280,15 +291,15 @@ function Dash() {
                             <CardContent>
                                 <img src='/images/school.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
                                 <Typography gutterBottom variant="h5" component="div">
-                               Resource
+                                    Resource
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                 Total:   {resourceCount}
+                                    Total:   {resourceCount}
                                 </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
-                   
+
                 </Grid>
                 <br></br> <br></br>
                 <Grid container spacing={2} justifyContent="center">
@@ -297,10 +308,10 @@ function Dash() {
                             <CardContent>
                                 <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
                                 <Typography gutterBottom variant="h5" component="div">
-                              
+                                    Activity
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                  
+                                    total: {activityCount}
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -310,15 +321,15 @@ function Dash() {
                             <CardContent>
                                 <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
                                 <Typography gutterBottom variant="h5" component="div">
-                                
+
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                   
+
                                 </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
-                   
+
                 </Grid>
             </Box>
         </Box>

@@ -97,7 +97,7 @@ export default function PersistentDrawerRight() {
           >
             <List sx={{ width: '200px' }}>
               <ListItem key="REGISTER" disablePadding onClick={handleMenuClose}>
-                <ListItemButton component={Link} to="/register">
+                <ListItemButton component={Link} to="/registration">
                   <ListItemText primary="REGISTER" primaryTypographyProps={{ fontSize: '1.2rem', fontWeight: 'bold', padding: '12px 24px' }} />
                 </ListItemButton>
               </ListItem>

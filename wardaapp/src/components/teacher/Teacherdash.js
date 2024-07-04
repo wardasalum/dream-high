@@ -41,7 +41,7 @@ import {
 
 const drawWidth = 220;
 
-function Userdash() {
+function Teacherdash() {
     const [drawerOpen, setDrawerOpen] = React.useState(false);
     const [howToWriteOpen, setHowToWriteOpen] = React.useState(false);
     const [postsOpen, setPostsOpen] = React.useState(false);
@@ -326,7 +326,7 @@ function Userdash() {
     );
 }
 
-export default Userdash;
+export default Teacherdash;
 
 
 

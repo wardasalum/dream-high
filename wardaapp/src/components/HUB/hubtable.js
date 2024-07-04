@@ -108,7 +108,7 @@ function Userdash() {
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addadmin">
+                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
                             <ListItemText primary="ADD" />
                         </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
@@ -238,12 +238,12 @@ function Userdash() {
                 sx={{
                     flexGrow: 1,
                     p: 3,
-                    mt: 8, // Adjust margin top to create space for the app bar
+                    mt: 8, 
                 }}
             >
                 <Grid container spacing={1} justifyContent="center">
-               
-                   <HubForm/>
+               {/*  to list hubform  */}
+                   <HubForm/> 
                 </Grid>
             </Box>
         </Box>

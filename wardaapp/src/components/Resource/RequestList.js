@@ -53,7 +53,7 @@ function RequestView() {
     const [requests, setRequests] = useState([]);
     const [request, setRequest] = useState({
         description: "",
-        name:"",
+        name: "",
         quantity: ""
     });
 
@@ -68,7 +68,7 @@ function RequestView() {
     }, [id]);
 
     // Fetch resource data by id
-    const  fetchRequest = async (id) => {
+    const fetchRequest = async (id) => {
         const response = await axios.get(`http://localhost:8080/request/${id}`);
         setRequest(response.data);
     };
@@ -104,13 +104,13 @@ function RequestView() {
     };
     const handleApprove = async (id) => {
         try {
-          const response = await axios.put(`http://localhost:8080/requests/${id}/approve`);
-          console.log('Request approved:', response.data);
-          // Optionally, update the local state to reflect the change
+            const response = await axios.put(`http://localhost:8080/requests/${id}/approve`);
+            console.log('Request approved:', response.data);
+            // Optionally, update the local state to reflect the change
         } catch (error) {
-          console.error('Error approving request:', error);
+            console.error('Error approving request:', error);
         }
-      };
+    };
     const responsiveDrawer = (
         <div style={{ backgroundColor: "#09212E", height: "100%" }}>
             <Toolbar />
@@ -144,10 +144,10 @@ function RequestView() {
                         </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/requestsend">
                             <ListItemText primary="Send request" />
-                        </ListItemButton>  
+                        </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguest">
                             <ListItemText primary="ViewRequest" />
-                        </ListItemButton> 
+                        </ListItemButton>
                     </List>
                 </Collapse>
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setImproveOpen)}>
@@ -294,6 +294,7 @@ function RequestView() {
                                             <TableCell>
                                                 <IconButton color="error" onClick={() => deleteRequest(request.id)}>
                                                     <DeleteIcon />
+                                                    
                                                 </IconButton>
                                             </TableCell>
                                         </TableRow>

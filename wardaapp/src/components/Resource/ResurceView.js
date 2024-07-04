@@ -52,9 +52,9 @@ function ResourceView() {
 
     const [resources, setResources] = useState([]);
     const [resource, setResource] = useState({
+        type: "",
         name: "",
-        contact: "",
-        location: "",
+        total: ""
     });
 
     const [searchTerm, setSearchTerm] = useState("");

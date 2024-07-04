@@ -30,6 +30,9 @@ import SchoolView from './components/School/viewschools';
 import ResourceRequest from './components/Resource/ResourceRequest';
 import RequestApproval from './components/Resource/RequestApproval';
 import RequestView from './components/Resource/RequestList';
+import Teacherdash from './components/teacher/Teacherdash';
+import AddActivity from './components/Activity/upcoming activity';
+import ActivityView from './components/Activity/ActivityView'
 
 function App() {
   return (
@@ -39,37 +42,42 @@ function App() {
           path="/"
           element={
             <>
-              <Login/>
+              <Dash/>
               {/* <div style={{ marginTop: '0px' }}>
-                <Home2/> 
+                <Home2 />
               </div>
-            <Footer/> */}
+              <Footer /> */}
             </>
           }
         />
-       
+
         <Route path="/about" element={<AboutUs />} />
-     <Route path="/ResurceView" element={<ResourceView />} />
-         <Route path="/edduser" element={<Edduser />} />
+        <Route path="/ResurceView" element={<ResourceView />} />
+        <Route path="/edduser" element={<Edduser />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/resrcadd" element={<ResourceAdd />} />
         <Route path="/addschool" element={<Addschools />} />
         <Route path="/viewSChool" element={<SchoolView />} />
         <Route path="/edituser/:id" element={<Edituser />} />
+        <Route path="/editActivity/:id" element={<AddActivity />} />
         <Route path="/viewspecific" element={<Viewspecific />} />
-        <Route path="/addadmin" element={<Hubtable />} />
+        <Route path="/addhub" element={<Hubtable />} />
         <Route path="/editadmin/:id" element={<Editadmin />} />
-        <Route path="/hublist" element={<List/>} />
-        <Route path="/userdash" element={<Userdash/>} />
-        <Route path="/dash" element={<Dash/>} />
+        <Route path="/hublist" element={<List />} />
+        <Route path="/userdash" element={<Userdash />} />
+        <Route path="/dash" element={<Dash />} />
+        <Route path="/activityadd" element={<AddActivity/>} />
+        <Route path="/activityview" element={<ActivityView/>} />
         <Route path="/signup" element={<Registration />} />
         <Route path="/login" element={<Login />} />
         <Route path="/requestsend" element={<ResourceRequest />} />
-        <Route path="/reg" element={<Login />} />
-        <Route path="/reguest" element={<RequestView/>} />
-        <Route path="/reguestapprv" element={<RequestApproval/>} />
+        <Route path="/teacher" element={<Teacherdash/>} />
+        <Route path="/registration" element={<Registration />} />
+        <Route path="/reguest" element={<RequestView />} />
+        <Route path="/ActivityView" element={<ActivityView />} />
+        <Route path="/reguestapprv" element={<RequestApproval />} />
 
-     
+
       </Routes>
     </Router>
   );
