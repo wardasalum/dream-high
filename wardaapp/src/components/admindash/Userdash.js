@@ -5,6 +5,7 @@ import {
     Routes,
     Route,
     Link,
+    useNavigate,
 } from "react-router-dom";
 import axios from "axios";
 import Box from "@mui/material/Box";
@@ -51,6 +52,7 @@ function Userdash() {
     const [hubCount, setHubCount] = useState(0); // Initialize hub count state
     const [announcements, setAnnouncements] = useState([]);
     
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Fetch the total number of admins from the backend API
@@ -76,14 +78,7 @@ function Userdash() {
     
  
 
-    const fetchAnnouncements = () => {
-        // Simulated fetch for demonstration
-        const demoAnnouncements = [
-            { id: 1, text: "Welcome to our platform!" },
-            { id: 2, text: "New feature announcement!" }
-        ];
-        setAnnouncements(demoAnnouncements);
-    };
+  
 
     const handleToggle = () => {
         setDrawerOpen(!drawerOpen);
@@ -92,6 +87,13 @@ function Userdash() {
     const handleDropdownToggle = (setDropdownOpen) => {
         setDropdownOpen(prevState => !prevState);
     };
+
+    const handleLogout = () => {
+        // Perform logout logic here (e.g., clearing session, etc.)
+        // Redirect to the login page
+        navigate('/login');
+    };
+
 
    
     
@@ -188,14 +190,7 @@ function Userdash() {
                 </Collapse>
             </List>
             <Divider />
-            <List>
-                <ListItemButton sx={{ color: "white" }}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <Feedback />
-                    </ListItemIcon>
-                    <ListItemText primary="Contact us" />
-                </ListItemButton>
-            </List>
+            <div onClick={handleLogout}>
             <Typography
                 sx={{
                     backgroundColor: "blue",
@@ -206,9 +201,13 @@ function Userdash() {
                     margin: 2,
                 }}
             >
-                Sign In
+                Logout
             </Typography>
+            </div>
         </div>
+           
+            
+            
     );
 
     return (

@@ -5,6 +5,8 @@ import {
     Routes,
     Route,
     Link,
+    useNavigate,
+
 } from "react-router-dom";
 import axios from "axios";
 import Box from "@mui/material/Box";
@@ -51,6 +53,7 @@ function Teacherdash() {
     const [hubCount, setHubCount] = useState(0); // Initialize hub count state
     const [announcements, setAnnouncements] = useState([]);
     
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Fetch the total number of admins from the backend API
@@ -94,10 +97,15 @@ function Teacherdash() {
     };
 
    
-    
+    const handleLogout = () => {
+        // Perform logout logic here (e.g., clearing session, etc.)
+        // Redirect to the login page
+        navigate('/login');
+    };
+
 
     const responsiveDrawer = (
-        <div style={{ backgroundColor: "#09212E", height: "100%" }}>
+        <div style={{ backgroundColor: "#09212E", height: "80%" }}>
             <Toolbar />
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
                 <img src='/images/computer.png' alt="Computer" style={{ width: "60%", maxWidth: "200px", height: "75%" }} />
@@ -188,14 +196,7 @@ function Teacherdash() {
                 </Collapse>
             </List>
             <Divider />
-            <List>
-                <ListItemButton sx={{ color: "white" }}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <Feedback />
-                    </ListItemIcon>
-                    <ListItemText primary="Contact us" />
-                </ListItemButton>
-            </List>
+          <div onClick={handleLogout}>
             <Typography
                 sx={{
                     backgroundColor: "blue",
@@ -206,8 +207,9 @@ function Teacherdash() {
                     margin: 2,
                 }}
             >
-                Sign In
+                Logout
             </Typography>
+            </div>
         </div>
     );
 

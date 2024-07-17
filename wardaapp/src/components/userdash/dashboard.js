@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from 'react';
 import AppBar from "@mui/material/AppBar";
 import {
     BrowserRouter as Router,
     Routes,
     Route,
     Link,
+    useNavigate,
 } from "react-router-dom";
 import axios from "axios";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -56,6 +57,8 @@ function Dash() {
     const [activityCount, setActivityCount] = useState(0);
     const [showActivityAddedPopup, setShowActivityAddedPopup] = useState(false);
     const [notifications, setNotifications] = useState([]);
+    const navigate = useNavigate();
+   
 
     const handleNotificationsClick = () => {
         // Handle click logic for notifications
@@ -97,26 +100,30 @@ function Dash() {
 
 
 
-    useEffect(() => {
-        fetchNotifications();
-    }, []);
-
-    const fetchNotifications = () => {
-        axios.get("http://localhost:8080/notifications")
-            .then(response => {
-                setNotifications(response.data);
-            })
-            .catch(error => {
-                console.error("Error fetching notifications:", error);
-            });
-    };
-
+  
+       
+    
+        useEffect(() => {
+            fetch('http://localhost:8080/api/notifications')
+                .then(response => response.json())
+                .then(data => setNotifications(data))
+                .catch(error => console.error('Error fetching notifications:', error));
+        }, []);
+    
+        const handleClick = (message) => {
+            alert(message); // Replace with your desired message display logic
+        };
     const handleToggle = () => {
         setDrawerOpen(!drawerOpen);
     };
 
     const handleDropdownToggle = (setDropdownOpen) => {
         setDropdownOpen(prevState => !prevState);
+    };
+    const handleLogout = () => {
+        // Perform logout logic here (e.g., clearing session, etc.)
+        // Redirect to the login page
+        navigate('/login');
     };
 
     const responsiveDrawer = (
@@ -200,6 +207,7 @@ function Dash() {
             </List>
             <Divider />
 
+            <div onClick={handleLogout}>
             <Typography
                 sx={{
                     backgroundColor: "blue",
@@ -212,6 +220,7 @@ function Dash() {
             >
                 Logout
             </Typography>
+            </div>
         </div>
     );
 
@@ -242,6 +251,13 @@ function Dash() {
                         <IconButton color="inherit" onClick={handleNotificationsClick}>
                             <Badge badgeContent={notifications.length} color="secondary">
                                 <NotificationsIcon />
+                                <ul>
+                {notifications.map(notification => (
+                    <li key={notification.id} onClick={() => handleClick(notification.message)}>
+                        {notification.message}
+                    </li>
+                ))}
+            </ul>
                             </Badge>
                         </IconButton>
 

@@ -42,7 +42,7 @@ function App() {
           path="/"
           element={
             <>
-              <Dash/>
+              <Teacherdash/>
               {/* <div style={{ marginTop: '0px' }}>
                 <Home2 />
               </div>
