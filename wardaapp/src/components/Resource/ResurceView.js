@@ -85,6 +85,9 @@ function ResourceView() {
         loadResources();
     };
 
+
+
+
     // Handle search term change
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -172,14 +175,7 @@ function ResourceView() {
                 </Collapse>
             </List>
             <Divider />
-            <List>
-                <ListItemButton sx={{ color: "white" }}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <Feedback />
-                    </ListItemIcon>
-                    <ListItemText primary="Contact us" />
-                </ListItemButton>
-            </List>
+           
             <Typography
                 sx={{
                     backgroundColor: "blue",
@@ -190,7 +186,7 @@ function ResourceView() {
                     margin: 2,
                 }}
             >
-                Sign In
+                Logout
             </Typography>
         </div>
     );
@@ -276,6 +272,9 @@ function ResourceView() {
                                             <TableCell>{resource.type}</TableCell>
                                             <TableCell>{resource.total}</TableCell>
                                             <TableCell>
+                                                <IconButton color="primary" component={Link} to={`/editresource/${resource.id}`}>
+                                                    <EditIcon />
+                                                </IconButton>
                                                 <IconButton color="error" onClick={() => deleteResource(resource.id)}>
                                                     <DeleteIcon />
                                                 </IconButton>

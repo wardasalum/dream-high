@@ -78,16 +78,6 @@ function Teacherdash() {
     }, []);
     
  
-
-    const fetchAnnouncements = () => {
-        // Simulated fetch for demonstration
-        const demoAnnouncements = [
-            { id: 1, text: "Welcome to our platform!" },
-            { id: 2, text: "New feature announcement!" }
-        ];
-        setAnnouncements(demoAnnouncements);
-    };
-
     const handleToggle = () => {
         setDrawerOpen(!drawerOpen);
     };
@@ -127,19 +117,19 @@ function Teacherdash() {
                     <ListItemIcon sx={{ color: "white" }}>
                         <UploadFile />
                     </ListItemIcon>
-                    <ListItemText primary="Hub Management" />
+                    <ListItemText primary="Class management" />
                     {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
+                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addclass">
                             <ListItemText primary="ADD" />
                         </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
                             <ListItemText primary="View" />
                         </ListItemButton> 
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguestapprv">
-                            <ListItemText primary="Request list" />
+                            <ListItemText primary="" />
                         </ListItemButton>   
                     </List>
                 </Collapse>
@@ -147,7 +137,7 @@ function Teacherdash() {
                     <ListItemIcon sx={{ color: "white" }}>
                         <UploadFile />
                     </ListItemIcon>
-                    <ListItemText primary="Upcoming activities" />
+                    <ListItemText primary="Resources" />
                     {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
@@ -181,12 +171,12 @@ function Teacherdash() {
                     <ListItemIcon sx={{ color: "white" }}>
                         <SchoolRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Event and Activity Management" />
+                    <ListItemText primary="Announcement" />
                     {postsOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={postsOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/resrcadd">
                             <ListItemText primary="ANNOUNCEMENT" />
                         </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewhub">

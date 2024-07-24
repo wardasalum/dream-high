@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import axios from "axios";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import Badge from "@mui/material/Badge"; // Add Badge import
+import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Collapse from "@mui/material/Collapse";
@@ -30,8 +30,10 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Grid from "@mui/material/Grid";
-
-
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 import {
     CollectionsBookmark,
@@ -47,72 +49,22 @@ import {
 const drawWidth = 220;
 
 function Dash() {
-    const [drawerOpen, setDrawerOpen] = React.useState(false);
-    const [howToWriteOpen, setHowToWriteOpen] = React.useState(false);
-    const [postsOpen, setPostsOpen] = React.useState(false);
-    const [pickArticleOpen, setPickArticleOpen] = React.useState(false);
-    const [improveOpen, setImproveOpen] = React.useState(false);
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [howToWriteOpen, setHowToWriteOpen] = useState(false);
+    const [postsOpen, setPostsOpen] = useState(false);
+    const [pickArticleOpen, setPickArticleOpen] = useState(false);
+    const [improveOpen, setImproveOpen] = useState(false);
     const [resourceCount, setResourceCount] = useState(0);
     const [schoolCount, setSchoolCount] = useState(0);
     const [activityCount, setActivityCount] = useState(0);
-    const [showActivityAddedPopup, setShowActivityAddedPopup] = useState(false);
     const [notifications, setNotifications] = useState([]);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [popupMessage, setPopupMessage] = useState('');
+    const [popupOpen, setPopupOpen] = useState(false);
     const navigate = useNavigate();
-   
 
-    const handleNotificationsClick = () => {
-        // Handle click logic for notifications
-        console.log('Notifications clicked!');
-    };
+    const open = Boolean(anchorEl);
 
-    useEffect(() => {
-        // Fetch the total number of admins from the backend API
-        axios.get("http://localhost:8080/resources")
-            .then(response => {
-                setResourceCount(response.data.length); // Set the total number of resource
-            })
-            .catch(error => {
-                console.error("Error fetching resoiurce count:", error);
-            });
-    }, []);
-
-    useEffect(() => {
-        // Fetch the total number of schools from the backend API
-        axios.get("http://localhost:8080/schools")
-            .then(response => {
-                setSchoolCount(response.data.length); // Set the total number of schools
-            })
-            .catch(error => {
-                console.error("Error fetching school count:", error);
-            });
-    }, []);
-
-    useEffect(() => {
-        // Fetch the total number of activity from the backend API
-        axios.get("http://localhost:8080/activities")
-            .then(response => {
-                setActivityCount(response.data.length); // Set the total number of schools
-            })
-            .catch(error => {
-                console.error("Error fetching activity count:", error);
-            });
-    }, []);
-
-
-
-  
-       
-    
-        useEffect(() => {
-            fetch('http://localhost:8080/api/notifications')
-                .then(response => response.json())
-                .then(data => setNotifications(data))
-                .catch(error => console.error('Error fetching notifications:', error));
-        }, []);
-    
-        const handleClick = (message) => {
-            alert(message); // Replace with your desired message display logic
-        };
     const handleToggle = () => {
         setDrawerOpen(!drawerOpen);
     };
@@ -120,11 +72,103 @@ function Dash() {
     const handleDropdownToggle = (setDropdownOpen) => {
         setDropdownOpen(prevState => !prevState);
     };
+
     const handleLogout = () => {
-        // Perform logout logic here (e.g., clearing session, etc.)
-        // Redirect to the login page
         navigate('/login');
     };
+
+    const handleNotificationsClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+
+    const handleNotificationClick = (index) => {
+        // Mark notification as read
+        const updatedNotifications = [...notifications];
+        updatedNotifications[index].read = true;
+        setNotifications(updatedNotifications);
+
+        // Show popup message
+        setPopupMessage(updatedNotifications[index].message);
+        setPopupOpen(true);
+
+        // Delete notification from database
+        const notificationId = updatedNotifications[index].id; // Assuming 'id' is the unique identifier for notifications
+        axios.delete(`http://localhost:8080/notification/${notificationId}`)
+            .then(response => {
+                console.log("Notification deleted successfully:", response.data);
+                // Remove clicked notification from list
+                updatedNotifications.splice(index, 1);
+                setNotifications(updatedNotifications);
+            })
+            .catch(error => {
+                console.error("Error deleting notification:", error);
+            });
+    };
+
+    const handlePopupClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setPopupOpen(false);
+    };
+
+    const handleNotificationsClose = () => {
+        setAnchorEl(null);
+    };
+
+    useEffect(() => {
+        // Fetch initial notifications
+        axios.get("http://localhost:8080/notifications")
+            .then(response => {
+                const initialNotifications = response.data.map(notification => ({
+                    ...notification,
+                    read: false  // Add a 'read' property to each notification
+                }));
+                setNotifications(initialNotifications);
+            })
+            .catch(error => {
+                console.error("Error fetching notifications:", error);
+            });
+    }, []);
+
+    useEffect(() => {
+        axios.get("http://localhost:8080/resources")
+            .then(response => {
+                setResourceCount(response.data.length);
+            })
+            .catch(error => {
+                console.error("Error fetching resource count:", error);
+            });
+
+        axios.get("http://localhost:8080/schools")
+            .then(response => {
+                setSchoolCount(response.data.length);
+            })
+            .catch(error => {
+                console.error("Error fetching school count:", error);
+            });
+
+        axios.get("http://localhost:8080/activities")
+            .then(response => {
+                setActivityCount(response.data.length);
+            })
+            .catch(error => {
+                console.error("Error fetching activity count:", error);
+            });
+
+        axios.get("http://localhost:8080/notifications")
+            .then(response => {
+                const initialNotifications = response.data.map(notification => ({
+                    ...notification,
+                    read: false  // Add a 'read' property to each notification
+                }));
+                setNotifications(initialNotifications);
+            })
+            .catch(error => {
+                console.error("Error fetching notifications:", error);
+            });
+    }, []);
 
     const responsiveDrawer = (
         <div style={{ backgroundColor: "#09212E", height: "100%" }}>
@@ -133,18 +177,13 @@ function Dash() {
                 <img src='/images/computer.png' alt="Computer" style={{ width: "60%", maxWidth: "200px", height: "75%" }} />
             </Box>
             <Divider />
-
             <List sx={{ backgroundColor: "#09212E" }}>
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setHowToWriteOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <SupervisorAccountRoundedIcon />
                     </ListItemIcon>
                     <ListItemText primary="Overview Section" component={Link} to="/dash" />
-
                 </ListItemButton>
-
-
-
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <UploadFile />
@@ -168,7 +207,6 @@ function Dash() {
                         </ListItemButton>
                     </List>
                 </Collapse>
-
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setImproveOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <Edit />
@@ -180,9 +218,8 @@ function Dash() {
                     <List component="div" disablePadding>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addschool">
                             <ListItemText primary="Add School" />
-
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewSChool" >
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewSChool">
                             <ListItemText primary="View school" />
                         </ListItemButton>
                     </List>
@@ -199,27 +236,26 @@ function Dash() {
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/activityadd">
                             <ListItemText primary="addactivity" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/activityview" >
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/activityview">
                             <ListItemText primary="viewactivity" />
                         </ListItemButton>
                     </List>
                 </Collapse>
             </List>
             <Divider />
-
             <div onClick={handleLogout}>
-            <Typography
-                sx={{
-                    backgroundColor: "blue",
-                    color: "white",
-                    borderRadius: 10,
-                    textAlign: "center",
-                    padding: 1,
-                    margin: 2,
-                }}
-            >
-                Logout
-            </Typography>
+                <Typography
+                    sx={{
+                        backgroundColor: "blue",
+                        color: "white",
+                        borderRadius: 10,
+                        textAlign: "center",
+                        padding: 1,
+                        margin: 2,
+                    }}
+                >
+                    Logout
+                </Typography>
             </div>
         </div>
     );
@@ -246,22 +282,38 @@ function Dash() {
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
                         Dashboard
                     </Typography>
-                    <IconButton color="inherit">
+                    <IconButton
+                        color="inherit"
+                        onClick={handleNotificationsClick}
+                    >
+                        <Badge badgeContent={notifications.filter(notification => !notification.read).length} color="error">
+                            <NotificationsIcon />
+                        </Badge>
 
-                        <IconButton color="inherit" onClick={handleNotificationsClick}>
-                            <Badge badgeContent={notifications.length} color="secondary">
-                                <NotificationsIcon />
-                                <ul>
-                {notifications.map(notification => (
-                    <li key={notification.id} onClick={() => handleClick(notification.message)}>
-                        {notification.message}
-                    </li>
-                ))}
-            </ul>
-                            </Badge>
-                        </IconButton>
-
-                    </IconButton>
+                    </IconButton >
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleNotificationsClose}
+                    >
+                        {notifications.length > 0 ? (
+                            notifications.map((notification, index) => (
+                                <MenuItem key={index} onClick={() => handleNotificationClick(index)}>
+                                    {notification.read ? (
+                                        <Typography variant="body1" color="textSecondary">
+                                            {notification.message}
+                                        </Typography>
+                                    ) : (
+                                        <Typography variant="body1" color="textPrimary">
+                                            {notification.message}
+                                        </Typography>
+                                    )}
+                                </MenuItem>
+                            ))
+                        ) : (
+                            <MenuItem>No new notifications</MenuItem>
+                        )}
+                    </Menu>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -285,7 +337,7 @@ function Dash() {
                 sx={{
                     flexGrow: 1,
                     p: 3,
-                    mt: 8, // Adjust margin top to create space for the app bar
+                    mt: 8,
                 }}
             >
                 <Grid container spacing={2} justifyContent="center">
@@ -297,7 +349,7 @@ function Dash() {
                                     School
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    Total:   {schoolCount}
+                                    Total: {schoolCount}
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -310,14 +362,14 @@ function Dash() {
                                     Resource
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    Total:   {resourceCount}
+                                    Total: {resourceCount}
                                 </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
 
                 </Grid>
-                <br></br> <br></br>
+                <br /><br />
                 <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12} sm={6} md={4}>
                         <Card sx={{ maxWidth: 250, margin: "auto" }}>
@@ -327,7 +379,7 @@ function Dash() {
                                     Activity
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    total: {activityCount}
+                                    Total: {activityCount}
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -335,20 +387,28 @@ function Dash() {
                     <Grid item xs={12} sm={6} md={4}>
                         <Card sx={{ maxWidth: 250, margin: "auto" }}>
                             <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
+                                <img src='/images/school.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
                                 <Typography gutterBottom variant="h5" component="div">
-
+                                    Resource
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-
+                                    Total: {resourceCount}
                                 </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
-
                 </Grid>
             </Box>
+
+            {/* Snackbar for displaying popup message */}
+            <Snackbar open={popupOpen} autoHideDuration={6000} onClose={handlePopupClose}>
+                <MuiAlert elevation={6} variant="filled" onClose={handlePopupClose} severity="info">
+                    {popupMessage}
+                </MuiAlert>
+            </Snackbar>
         </Box>
     );
 }
+
 export default Dash;
+
