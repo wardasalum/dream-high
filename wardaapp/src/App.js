@@ -34,6 +34,7 @@ import Teacherdash from './components/teacher/Teacherdash';
 import AddActivity from './components/Activity/upcoming activity';
 import ActivityView from './components/Activity/ActivityView'
 import ClassAdd from './components/class_management/ClassAdd';
+import ViewClass from './components/class_management/ViewClass';
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
         <Route path="/about" element={<AboutUs />} />
         <Route path="/addclass" element={<ClassAdd />} />
         <Route path="/ResurceView" element={<ResourceView />} />
+        <Route path="/ViewClass" element={<ViewClass />} />
         <Route path="/edduser" element={<Edduser />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/resrcadd" element={<ResourceAdd />} />
@@ -62,6 +64,7 @@ function App() {
         <Route path="/viewSChool" element={<SchoolView />} />
         <Route path="/edituser/:id" element={<Edituser />} />
         <Route path="/editresource/:id" element={<ResourceAdd />} />
+        <Route path="/editcategory/:id" element={<ClassAdd/>} />
         <Route path="/editActivity/:id" element={<AddActivity />} />
         <Route path="/viewspecific" element={<Viewspecific />} />
         <Route path="/addhub" element={<Hubtable />} />
