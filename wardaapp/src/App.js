@@ -35,7 +35,7 @@ import AddActivity from './components/Activity/upcoming activity';
 import ActivityView from './components/Activity/ActivityView'
 import ClassAdd from './components/class_management/ClassAdd';
 import ViewClass from './components/class_management/ViewClass';
-
+import Example from './components/exmple';
 function App() {
   return (
     <Router>
@@ -44,7 +44,7 @@ function App() {
           path="/"
           element={
             <>
-              <Teacherdash/>
+              <Example/>
               {/* <div style={{ marginTop: '0px' }}>
                 <Home2 />
               </div>
