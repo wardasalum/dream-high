@@ -44,7 +44,7 @@ function App() {
           path="/"
           element={
             <>
-              <Example/>
+              <ClassAdd/>
               {/* <div style={{ marginTop: '0px' }}>
                 <Home2 />
               </div>

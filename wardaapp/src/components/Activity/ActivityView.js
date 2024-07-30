@@ -64,16 +64,25 @@ function ActivityView() {
         }
     };
 
-    // Delete activity
+
+    // Delete resource
     const deleteActivity = async (id) => {
-        try {
-            await axios.delete(`http://localhost:8080/activity/${id}`);
-            loadActivities();
-        } catch (error) {
-            console.error("Error deleting activity: ", error);
+        // Ask for confirmation before deleting
+        const isConfirmed = window.confirm("Are you sure you want to delete this Activity?");
+    
+        if (isConfirmed) {
+            try {
+                // Perform the delete operation
+                await axios.delete(`http://localhost:8080/activity/${id}`);
+                // Reload categories after deletion
+                loadActivities();
+            } catch (error) {
+                // Handle errors here (e.g., show an error message to the user)
+                console.error("Error deleting activity:", error);
+            }
         }
     };
-
+    
     // Handle search term change
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);

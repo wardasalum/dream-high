@@ -54,9 +54,8 @@ function ViewClass() {
     const [category, setCategory] = useState({
         roomNumber: "",
         schedule: "",
-        teacherId: "",
         course: "",
-        name:""
+        teacherName:"",
     });
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -81,12 +80,7 @@ function ViewClass() {
         setCategories(result.data);
     };
 
-    // Delete resource
-    const deleteCategory = async (id) => {
-        await axios.delete(`http://localhost:8080/category/${id}`);
-        loadCategories();
-    };
-
+ 
     // Handle search term change
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -94,7 +88,7 @@ function ViewClass() {
 
     // Filter resources based on search term
     const filteredCategories = categories.filter((category) =>
-        category.course.toLowerCase().includes(searchTerm.toLowerCase())
+        category.teacherName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleToggle = () => {
@@ -105,6 +99,25 @@ function ViewClass() {
         setDropdownOpen((prevState) => !prevState);
     };
 
+    // Delete resource
+const deleteCategory = async (id) => {
+    // Ask for confirmation before deleting
+    const isConfirmed = window.confirm("Are you sure you want to delete this category?");
+
+    if (isConfirmed) {
+        try {
+            // Perform the delete operation
+            await axios.delete(`http://localhost:8080/category/${id}`);
+            // Reload categories after deletion
+            loadCategories();
+        } catch (error) {
+            // Handle errors here (e.g., show an error message to the user)
+            console.error("Error deleting category:", error);
+        }
+    }
+};
+
+
     const responsiveDrawer = (
         <div style={{ backgroundColor: "#09212E", height: "100%" }}>
             <Toolbar />
@@ -112,15 +125,37 @@ function ViewClass() {
                 <img src='/images/computer.png' alt="Computer" style={{ width: "60%", maxWidth: "200px", height: "75%" }} />
             </Box>
             <Divider />
-
             <List sx={{ backgroundColor: "#09212E" }}>
-                <ListItemButton component={Link} to="/dash" sx={{ color: "white" }}>
+                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setHowToWriteOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <SupervisorAccountRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Overview Section" />
+                    <ListItemText primary="Overview Section" component={Link} to="/userdash"/>
+                   
                 </ListItemButton>
-
+                
+                  
+                
+                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
+                    <ListItemIcon sx={{ color: "white" }}>
+                        <UploadFile />
+                    </ListItemIcon>
+                    <ListItemText primary="Class management" />
+                    {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
+                </ListItemButton>
+                <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addclass">
+                            <ListItemText primary="ADD" />
+                        </ListItemButton>
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
+                            <ListItemText primary="View" />
+                        </ListItemButton> 
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguestapprv">
+                            <ListItemText primary="" />
+                        </ListItemButton>   
+                    </List>
+                </Collapse>
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <UploadFile />
@@ -129,29 +164,29 @@ function ViewClass() {
                     {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/resrcadd">
+                <List component="div" disablePadding>
+                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
                             <ListItemText primary="ADD" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/ResurceView">
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
                             <ListItemText primary="View" />
-                        </ListItemButton>
+                        </ListItemButton>  
                     </List>
                 </Collapse>
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setImproveOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <Edit />
                     </ListItemIcon>
-                    <ListItemText primary="Upcoming activities" />
+                    <ListItemText primary="Reports and Analytics" />
                     {improveOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={improveOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve1">
-                            <ListItemText primary="Improve 1" />
+                            <ListItemText primary="" />
                         </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve2">
-                            <ListItemText primary="Improve 2" />
+                            <ListItemText primary="" />
                         </ListItemButton>
                     </List>
                 </Collapse>
@@ -159,16 +194,16 @@ function ViewClass() {
                     <ListItemIcon sx={{ color: "white" }}>
                         <SchoolRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Schools" />
+                    <ListItemText primary="Announcement" />
                     {postsOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={postsOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
-                            <ListItemText primary="add school" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/resrcadd">
+                            <ListItemText primary="ANNOUNCEMENT" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewSChool">
-                            <ListItemText primary="view school" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewhub">
+                            <ListItemText primary="view hub" />
                         </ListItemButton>
                     </List>
                 </Collapse>
@@ -257,8 +292,7 @@ function ViewClass() {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>ID</TableCell>
-                                        <TableCell>Teacher_Id</TableCell>
-                                        <TableCell>Name</TableCell>
+                                        <TableCell>Teacher Name</TableCell>
                                         <TableCell>Room number</TableCell>
                                         <TableCell>Schedule</TableCell>
                                         <TableCell>Course</TableCell>
@@ -269,8 +303,7 @@ function ViewClass() {
                                     {filteredCategories.map((category, index) => (
                                         <TableRow key={index}>
                                             <TableCell scope="row">{index + 1}</TableCell>
-                                            <TableCell>{category.teacherId}</TableCell> {/* Update here */}
-                                            <TableCell>{category.name}</TableCell>
+                                            <TableCell>{category.teacherName}</TableCell>
                                             <TableCell>{category.roomNumber}</TableCell>
                                             <TableCell>{category.schedule}</TableCell>
                                             <TableCell>{category.course}</TableCell>
