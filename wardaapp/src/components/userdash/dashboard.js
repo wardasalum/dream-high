@@ -207,6 +207,7 @@ function Dash() {
                         </ListItemButton>
                     </List>
                 </Collapse>
+                
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setImproveOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <Edit />
@@ -224,6 +225,8 @@ function Dash() {
                         </ListItemButton>
                     </List>
                 </Collapse>
+                
+                
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPostsOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <SchoolRoundedIcon />
@@ -239,6 +242,24 @@ function Dash() {
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/activityview">
                             <ListItemText primary="viewactivity" />
                         </ListItemButton>
+                    </List>
+                </Collapse>
+                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
+                    <ListItemIcon sx={{ color: "white" }}>
+                        <UploadFile />
+                    </ListItemIcon>
+                    <ListItemText primary="Class management" />
+                    {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
+                </ListItemButton>
+                <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addclass">
+                            <ListItemText primary="ADD" />
+                        </ListItemButton>
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/ViewClass2">
+                            <ListItemText primary="View" />
+                        </ListItemButton> 
+                         
                     </List>
                 </Collapse>
             </List>

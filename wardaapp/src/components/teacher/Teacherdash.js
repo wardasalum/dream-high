@@ -125,12 +125,10 @@ function Teacherdash() {
                     <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addclass">
                             <ListItemText primary="ADD" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/ViewClass">
                             <ListItemText primary="View" />
                         </ListItemButton> 
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguestapprv">
-                            <ListItemText primary="" />
-                        </ListItemButton>   
+                         
                     </List>
                 </Collapse>
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
@@ -143,7 +141,7 @@ function Teacherdash() {
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
-                            <ListItemText primary="ADD" />
+                            <ListItemText primary="upload" />
                         </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
                             <ListItemText primary="View" />

@@ -61,6 +61,7 @@ function  Userdash() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [hubCount, setHubCount] = useState(0); // Initialize hub count state
     const [popupMessage, setPopupMessage] = useState('');
+    const [RequestCount, setRequestCount] = useState(0);
     const [popupOpen, setPopupOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -116,6 +117,16 @@ function  Userdash() {
                         console.error("Error fetching hub count:", error);
                     });
           
+                    
+                // Fetch the total number of requests from the backend API
+                axios.get("http://localhost:8080/requests")
+                .then(response => {
+                    setRequestCount(response.data.length); // Set the total number of hubs
+                })
+                .catch(error => {
+                    console.error("Error fetching Request count:", error);
+                });
+      
     const handlePopupClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -372,10 +383,10 @@ function  Userdash() {
                             <CardContent>
                                 <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
                                 <Typography gutterBottom variant="h5" component="div">
-
+                              Request Count
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-
+                            Total Request: {RequestCount}
                                 </Typography>
                             </CardContent>
                         </Card>

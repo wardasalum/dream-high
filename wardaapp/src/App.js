@@ -35,7 +35,11 @@ import AddActivity from './components/Activity/upcoming activity';
 import ActivityView from './components/Activity/ActivityView'
 import ClassAdd from './components/class_management/ClassAdd';
 import ViewClass from './components/class_management/ViewClass';
-import Example from './components/exmple';
+import Addannounc from './components/Announcement/Addannounc';
+import ViewClass2 from './components/class_management/ViewClass2';
+import FileUpload from './components/teacher/Uploadfile'; 
+
+
 function App() {
   return (
     <Router>
@@ -44,7 +48,7 @@ function App() {
           path="/"
           element={
             <>
-              <ClassAdd/>
+              <Login/>
               {/* <div style={{ marginTop: '0px' }}>
                 <Home2 />
               </div>
@@ -57,6 +61,7 @@ function App() {
         <Route path="/addclass" element={<ClassAdd />} />
         <Route path="/ResurceView" element={<ResourceView />} />
         <Route path="/ViewClass" element={<ViewClass />} />
+        <Route path="/ViewClass2" element={<ViewClass2 />} />
         <Route path="/edduser" element={<Edduser />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/resrcadd" element={<ResourceAdd />} />

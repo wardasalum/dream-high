@@ -58,7 +58,7 @@ export default function ClassAdd() {
         await axios.post("http://localhost:8080/category", category);
         alert("Category added successfully!");
       }
-      navigate("/ViewClass");
+      navigate("/ViewClass2");
     } catch (error) {
       console.error("Error adding/updating category: ", error);
       alert("Failed to add/update category. Please try again.");

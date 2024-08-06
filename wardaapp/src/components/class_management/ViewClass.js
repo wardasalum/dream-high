@@ -126,11 +126,11 @@ const deleteCategory = async (id) => {
             </Box>
             <Divider />
             <List sx={{ backgroundColor: "#09212E" }}>
-                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setHowToWriteOpen)}>
+                <ListItemButton sx={{ color: "white" }} component={Link} to="/teacher">
                     <ListItemIcon sx={{ color: "white" }}>
                         <SupervisorAccountRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Overview Section" component={Link} to="/userdash"/>
+                    <ListItemText primary="Overview Section" />
                    
                 </ListItemButton>
                 

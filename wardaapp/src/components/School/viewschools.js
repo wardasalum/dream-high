@@ -81,12 +81,24 @@ function SchoolView() {
         setSchools(result.data);
     };
 
-    // Delete resource
-    const deleteSchool = async (id) => {
-        await axios.delete(`http://localhost:8080/school/${id}`);
-        loadSchools();
-    };
 
+    // Delete school
+    const deleteSchool = async (id) => {
+        // Ask for confirmation before deleting
+        const isConfirmed = window.confirm("Are you sure you want to delete this school?");
+    
+        if (isConfirmed) {
+            try {
+                // Perform the delete operation
+                await axios.delete(`http://localhost:8080/school/${id}`);
+                // Reload categories after deletion
+                loadSchools();
+            } catch (error) {
+                // Handle errors here (e.g., show an error message to the user)
+                console.error("Error deleting school:", error);
+            }
+        }
+    };
     // Handle search term change
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
