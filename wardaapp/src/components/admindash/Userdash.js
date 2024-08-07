@@ -55,8 +55,6 @@ function  Userdash() {
     const [pickArticleOpen, setPickArticleOpen] = useState(false);
     const [improveOpen, setImproveOpen] = useState(false);
     const [resourceCount, setResourceCount] = useState(0);
-    const [schoolCount, setSchoolCount] = useState(0);
-    const [activityCount, setActivityCount] = useState(0);
     const [notifications, setNotifications] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [hubCount, setHubCount] = useState(0); // Initialize hub count state
@@ -162,21 +160,7 @@ function  Userdash() {
                 console.error("Error fetching resource count:", error);
             });
 
-        axios.get("http://localhost:8080/schools")
-            .then(response => {
-                setSchoolCount(response.data.length);
-            })
-            .catch(error => {
-                console.error("Error fetching school count:", error);
-            });
-
-        axios.get("http://localhost:8080/activities")
-            .then(response => {
-                setActivityCount(response.data.length);
-            })
-            .catch(error => {
-                console.error("Error fetching activity count:", error);
-            });
+   
 
         axios.get("http://localhost:8080/notifications")
             .then(response => {

@@ -94,7 +94,7 @@ function Dash() {
 
         // Delete notification from database
         const notificationId = updatedNotifications[index].id; // Assuming 'id' is the unique identifier for notifications
-        axios.delete(`http://localhost:8080/notification/${notificationId}`)
+        axios.delete(`http://localhost:8080/approved/${notificationId}`)
             .then(response => {
                 console.log("Notification deleted successfully:", response.data);
                 // Remove clicked notification from list
@@ -104,8 +104,10 @@ function Dash() {
             .catch(error => {
                 console.error("Error deleting notification:", error);
             });
-    };
-
+     };
+   
+ 
+    
     const handlePopupClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -117,20 +119,23 @@ function Dash() {
         setAnchorEl(null);
     };
 
-    useEffect(() => {
-        // Fetch initial notifications
-        axios.get("http://localhost:8080/notifications")
-            .then(response => {
-                const initialNotifications = response.data.map(notification => ({
-                    ...notification,
-                    read: false  // Add a 'read' property to each notification
-                }));
-                setNotifications(initialNotifications);
-            })
-            .catch(error => {
-                console.error("Error fetching notifications:", error);
-            });
-    }, []);
+    // useEffect(() => {
+    //     // Fetch initial notifications
+    //     axios.get("http://localhost:8080/approved")
+    //         .then(response => {
+    //             const initialNotifications = response.data.map(approved_notification => ({
+    //                 ...approved_notification,
+    //                 read: false  // Add a 'read' property to each notification
+    //             }));
+    //             setNotifications(initialNotifications);
+    //         })
+    //         .catch(error => {
+    //             console.error("Error fetching notifications:", error);
+    //         });
+    // }, []);
+
+ 
+    
 
     useEffect(() => {
         axios.get("http://localhost:8080/resources")
@@ -157,7 +162,7 @@ function Dash() {
                 console.error("Error fetching activity count:", error);
             });
 
-        axios.get("http://localhost:8080/notifications")
+        axios.get("http://localhost:8080/approved")
             .then(response => {
                 const initialNotifications = response.data.map(notification => ({
                     ...notification,
@@ -318,15 +323,15 @@ function Dash() {
                         onClose={handleNotificationsClose}
                     >
                         {notifications.length > 0 ? (
-                            notifications.map((notification, index) => (
+                            notifications.map((approved, index) => (
                                 <MenuItem key={index} onClick={() => handleNotificationClick(index)}>
-                                    {notification.read ? (
+                                    {approved.read ? (
                                         <Typography variant="body1" color="textSecondary">
-                                            {notification.message}
+                                            {approved.message}
                                         </Typography>
                                     ) : (
                                         <Typography variant="body1" color="textPrimary">
-                                            {notification.message}
+                                            {approved.message}
                                         </Typography>
                                     )}
                                 </MenuItem>

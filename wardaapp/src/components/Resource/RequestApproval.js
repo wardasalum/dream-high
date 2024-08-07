@@ -81,11 +81,25 @@ function RequestApproval() {
         setRequests(result.data);
     };
 
-    // Delete resource
-    const deleteRequest = async (id) => {
-        await axios.delete(`http://localhost:8080/request/${id}`);
-        loadRequests();
-    };
+
+        // Delete request
+        const deleteRequest = async (id) => {
+            // Ask for confirmation before deleting
+            const isConfirmed = window.confirm("Are you sure you want to delete this Request?");
+        
+            if (isConfirmed) {
+                try {
+                    // Perform the delete operation
+                    await axios.delete(`http://localhost:8080/request/${id}`);
+                    // Reload categories after deletion
+                    loadRequests();
+                } catch (error) {
+                    // Handle errors here (e.g., show an error message to the user)
+                    console.error("Error deleting request:", error);
+                }
+            }
+        };
+
 
     // Handle search term change
     const handleSearchChange = (event) => {
@@ -143,11 +157,11 @@ function RequestApproval() {
             <Divider />
        
             <List sx={{ backgroundColor: "#09212E" }}>
-                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setHowToWriteOpen)}>
+                <ListItemButton component={Link} to="/userdash" sx={{ color: "white" }} onClick={() => handleDropdownToggle(setHowToWriteOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <SupervisorAccountRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Overview Section" component={Link} to="/userdash"/>
+                    <ListItemText primary="Overview Section" />
                    
                 </ListItemButton>
                 
