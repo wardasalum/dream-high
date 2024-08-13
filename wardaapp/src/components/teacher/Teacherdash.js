@@ -122,9 +122,6 @@ function Teacherdash() {
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addclass">
-                            <ListItemText primary="ADD" />
-                        </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/ViewClass">
                             <ListItemText primary="View" />
                         </ListItemButton> 

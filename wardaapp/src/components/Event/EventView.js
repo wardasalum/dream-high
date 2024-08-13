@@ -1,94 +1,111 @@
 import React, { useState, useEffect } from "react";
-import AppBar from "@mui/material/AppBar";
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-
-    Link,
-} from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import Collapse from "@mui/material/Collapse";
-import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
-import SupervisorAccountRoundedIcon from '@mui/icons-material/SupervisorAccountRounded';
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import MenuIcon from "@mui/icons-material/Menu";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import Grid from "@mui/material/Grid";
+import axios from "axios";
 import { useNavigate, useParams } from 'react-router-dom';
 import {
+    Box,
+    CssBaseline,
+    Divider,
+    Drawer,
+    Grid,
+    IconButton,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Toolbar,
+    Typography,
+    Collapse,
+    TextField,
+    TableContainer,
     Paper,
     Table,
+    TableHead,
+    AppBar,
     TableBody,
     TableCell,
-    TableContainer,
-    TableHead,
-    Button,
     TableRow,
-    TextField,
-} from '@mui/material';
+} from "@mui/material";
+
+import MenuIcon from "@mui/icons-material/Menu";
+import SupervisorAccountRoundedIcon from '@mui/icons-material/SupervisorAccountRounded';
+import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
+import UploadFile from '@mui/icons-material/UploadFile';
+import Edit from '@mui/icons-material/Edit';
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { CollectionsBookmark, Edit, Feedback, ForkLeft, Help, PermMedia, UploadFile, Work, Clear } from "@mui/icons-material"; // Import Clear from '@mui/icons-material'
-
+import { CollectionsBookmark, Feedback,  Work, Clear } from "@mui/icons-material"; // Import Clear from '@mui/icons-material'
+import {
+  
+    Button,
+} from '@mui/material';
 const drawWidth = 220;
 
-function ResourceView() {
+function EventView() {
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [howToWriteOpen, setHowToWriteOpen] = useState(false);
+    const [activities, setActivities] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+ const [howToWriteOpen, setHowToWriteOpen] = useState(false);
     const [postsOpen, setPostsOpen] = useState(false);
     const [pickArticleOpen, setPickArticleOpen] = useState(false);
     const [improveOpen, setImproveOpen] = useState(false);
     const { id } = useParams(); // Correctly extract id from URL params
 
-    const [resources, setResources] = useState([]);
-    const [resource, setResource] = useState({
-        type: "",
-        name: "",
-        total: ""
-    });
-
-    const [searchTerm, setSearchTerm] = useState("");
-
     useEffect(() => {
-        if (id) {
-            // If id exists, fetch the hub data
-            fetchResource(id);
+        loadActivities();
+    }, []);
+
+    // Load all activities
+    const loadActivities = async () => {
+        try {
+            const result = await axios.get("http://localhost:8080/events");
+            setActivities(result.data);
+        } catch (error) {
+            console.error("Error loading events: ", error);
         }
-        loadResources();
-    }, [id]);
-
-    // Fetch resource data by id
-    const fetchResource = async (id) => {
-        const response = await axios.get(`http://localhost:8080/resource/${id}`);
-        setResource(response.data);
     };
 
-    // Load all resources
-    const loadResources = async () => {
-        const result = await axios.get("http://localhost:8080/resources");
-        setResources(result.data);
-    };
 
     // Delete resource
-    const deleteResource = async (id) => {
-        await axios.delete(`http://localhost:8080/resource/${id}`);
-        loadResources();
+    const deleteActivity = async (id) => {
+        // Ask for confirmation before deleting
+        const isConfirmed = window.confirm("Are you sure you want to delete this Activity?");
+    
+        if (isConfirmed) {
+            try {
+                // Perform the delete operation
+                await axios.delete(`http://localhost:8080/event/${id}`);
+                // Reload categories after deletion
+                loadActivities();
+            } catch (error) {
+                // Handle errors here (e.g., show an error message to the user)
+                console.error("Error deleting event:", error);
+            }
+        }
     };
-    //generate report
+    
+    // Handle search term change
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    // Filter activities based on search term
+    const filteredActivities = activities.filter((activity) =>
+        activity.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const handleDropdownToggle = (setDropdownOpen) => {
+                setDropdownOpen((prevState) => !prevState);
+            };
+        
+    const handleToggle = () => {
+        setDrawerOpen(!drawerOpen);
+    };
+//generate report
     const generatePDF = async () => {
         const input = document.getElementById('table-to-pdf');
     
@@ -97,7 +114,7 @@ function ResourceView() {
         const imgData = canvas.toDataURL('image/png');
     
         // A4 size in mm
-        const pdfWidth = 146;
+        const pdfWidth = 172;
         const pdfHeight = 297;
     
         // Create a new jsPDF instance with A4 size
@@ -109,7 +126,7 @@ function ResourceView() {
     
         // Add a title to the PDF
         pdf.setFontSize(16);
-        pdf.text('Resource Report', 85, 15, { align: 'center' });
+        pdf.text('Event Report', 85, 15, { align: 'center' });
     
         // Add image of the table to PDF
         const imgWidth = 190; // Adjust to fit the page width
@@ -119,26 +136,9 @@ function ResourceView() {
         pdf.addImage(imgData, 'PNG', 10, 20, imgWidth, imgHeight);
     
         // Save the PDF
-        pdf.save('resource-report.pdf');
+        pdf.save('event-report.pdf');
     };
-    // Handle search term change
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
-
-    // Filter resources based on search term
-    const filteredResources = resources.filter((resource) =>
-        resource.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const handleToggle = () => {
-        setDrawerOpen(!drawerOpen);
-    };
-
-    const handleDropdownToggle = (setDropdownOpen) => {
-        setDropdownOpen((prevState) => !prevState);
-    };
-
+    
     const responsiveDrawer = (
         <div style={{ backgroundColor: "#09212E", height: "100%" }}>
             <Toolbar />
@@ -146,46 +146,34 @@ function ResourceView() {
                 <img src='/images/computer.png' alt="Computer" style={{ width: "60%", maxWidth: "200px", height: "75%" }} />
             </Box>
             <Divider />
-
             <List sx={{ backgroundColor: "#09212E" }}>
-                <ListItemButton component={Link} to="/dash" sx={{ color: "white" }}>
+                <ListItemButton  component={Link} to="/userdash" sx={{ color: "white" }} onClick={() => handleDropdownToggle(setHowToWriteOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <SupervisorAccountRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Overview Section" />
+                    <ListItemText primary="Overview Section"  />
+
                 </ListItemButton>
+
+
 
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <UploadFile />
                     </ListItemIcon>
-                    <ListItemText primary="Resources" />
+                    <ListItemText primary="Hub Management" />
                     {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/resrcadd">
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
                             <ListItemText primary="ADD" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/ResurceView">
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
                             <ListItemText primary="View" />
                         </ListItemButton>
-                    </List>
-                </Collapse>
-                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setImproveOpen)}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <Edit />
-                    </ListItemIcon>
-                    <ListItemText primary="Upcoming activities" />
-                    {improveOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
-                </ListItemButton>
-                <Collapse in={improveOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve1">
-                            <ListItemText primary="Improve 1" />
-                        </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve2">
-                            <ListItemText primary="Improve 2" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguestapprv">
+                            <ListItemText primary="Request list" />
                         </ListItemButton>
                     </List>
                 </Collapse>
@@ -193,21 +181,40 @@ function ResourceView() {
                     <ListItemIcon sx={{ color: "white" }}>
                         <SchoolRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Schools" />
+                    <ListItemText primary="Event and Activity Management" />
                     {postsOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={postsOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
-                            <ListItemText primary="add school" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addevent">
+                            <ListItemText primary="AddEvent" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewSChool">
-                            <ListItemText primary="view school" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/eventview">
+                            <ListItemText primary="viewEvent" />
                         </ListItemButton>
                     </List>
                 </Collapse>
+                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setImproveOpen)}>
+                    <ListItemIcon sx={{ color: "white" }}>
+                        <Edit />
+                    </ListItemIcon>
+                    <ListItemText primary="Reports and Analytics" />
+                    {improveOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
+                </ListItemButton>
+                <Collapse in={improveOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve1">
+                            <ListItemText primary="" />
+                        </ListItemButton>
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve2">
+                            <ListItemText primary="" />
+                        </ListItemButton>
+                    </List>
+                </Collapse>
+               
             </List>
             <Divider />
+         
            
             <Typography
                 sx={{
@@ -219,7 +226,7 @@ function ResourceView() {
                     margin: 2,
                 }}
             >
-                Logout
+                Sign In
             </Typography>
         </div>
     );
@@ -288,30 +295,32 @@ function ResourceView() {
                             <Button variant="contained" color="primary" onClick={generatePDF}>
                                 Generate PDF
                             </Button>
-                        </Box>
+                            </Box>
                         <TableContainer component={Paper} id="table-to-pdf" height="250" border="300px" borderRadius="2px">
-                        <Table>
+                            <Table>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>ID</TableCell>
                                         <TableCell>Name</TableCell>
                                         <TableCell>Type</TableCell>
-                                        <TableCell>Total</TableCell>
+                                        <TableCell>Description</TableCell>
+                                        <TableCell>Date</TableCell>
                                         <TableCell>Action</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {filteredResources.map((resource, index) => (
+                                    {filteredActivities.map((activity, index) => (
                                         <TableRow key={index}>
-                                            <TableCell scope="row">{index + 1}</TableCell>
-                                            <TableCell>{resource.name}</TableCell>
-                                            <TableCell>{resource.type}</TableCell>
-                                            <TableCell>{resource.total}</TableCell>
+                                            <TableCell>{activity.id}</TableCell>
+                                            <TableCell>{activity.name}</TableCell>
+                                            <TableCell>{activity.type}</TableCell>
+                                            <TableCell>{activity.description}</TableCell>
+                                            <TableCell>{activity.date}</TableCell>
                                             <TableCell>
-                                                <IconButton color="primary" component={Link} to={`/editresource/${resource.id}`}>
-                                                    <EditIcon />
+                                                <IconButton component={Link} to={`/editEvent/${activity.id}`} color="primary">
+                                                    <Edit />
                                                 </IconButton>
-                                                <IconButton color="error" onClick={() => deleteResource(resource.id)}>
+                                                <IconButton color="error" onClick={() => deleteActivity(activity.id)}>
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </TableCell>
@@ -327,4 +336,4 @@ function ResourceView() {
     );
 }
 
-export default ResourceView;
+export default EventView;

@@ -28,6 +28,8 @@ import CardContent from "@mui/material/CardContent";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Grid from "@mui/material/Grid"; // Add this line
 import { useNavigate, useParams } from 'react-router-dom';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import {
     Paper,
     Table,
@@ -36,9 +38,11 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    Button,
     TextField,
 
 } from '@mui/material';
+import {  Clear } from "@mui/icons-material"; 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -62,10 +66,11 @@ function Hublist() {
     const [pickArticleOpen, setPickArticleOpen] = React.useState(false);
     const [improveOpen, setImproveOpen] = React.useState(false);
     const [errors, setErrors] = useState({});
-  
+
     const { id } = useParams(); // Correctly extract id from URL params
 
     const [hubs, setHubs] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
     const [hub, setHub] = useState({
         name: "",
         contact: "",
@@ -91,15 +96,15 @@ function Hublist() {
         const result = await axios.get("http://localhost:8080/hubs");
         setHubs(result.data);
     };
-   
 
-    
+
+
 
     // // Delete hub
     const deleteHub = async (id) => {
         // Ask for confirmation before deleting
         const isConfirmed = window.confirm("Are you sure you want to delete this hub?");
-    
+
         if (isConfirmed) {
             try {
                 // Perform the delete operation
@@ -111,15 +116,56 @@ function Hublist() {
                 console.error("Error deleting hub:", error);
             }
         }
-    };
+    }; 
+  // Handle search term change
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+};
+
+// Filter hubs based on search term
+const filteredHubs = hubs.filter((hub) =>
+    hub.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+const handleDropdownToggle = (setDropdownOpen) => {
+    setDropdownOpen((prevState) => !prevState);
+};
+
+const handleToggle = () => {
+    setDrawerOpen(!drawerOpen);
+};
+    //generate report
+    const generatePDF = async () => {
+        const input = document.getElementById('table-to-pdf');
     
-
-    const handleToggle = () => {
-        setDrawerOpen(!drawerOpen);
-    };
-
-    const handleDropdownToggle = (setDropdownOpen) => {
-        setDropdownOpen(prevState => !prevState);
+        // Generate canvas from HTML
+        const canvas = await html2canvas(input);
+        const imgData = canvas.toDataURL('image/png');
+    
+        // A4 size in mm
+        const pdfWidth = 150;
+        const pdfHeight = 297;
+    
+        // Create a new jsPDF instance with A4 size
+        const pdf = new jsPDF({
+            orientation: 'portrait', // or 'landscape'
+            unit: 'mm',
+            format: [pdfWidth, pdfHeight]
+        });
+    
+        // Add a title to the PDF
+        pdf.setFontSize(16);
+        pdf.text('Event Report', 85, 15, { align: 'center' });
+    
+        // Add image of the table to PDF
+        const imgWidth = 190; // Adjust to fit the page width
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+        // Adjust the position of the image to leave space for the title
+        pdf.addImage(imgData, 'PNG', 10, 20, imgWidth, imgHeight);
+    
+        // Save the PDF
+        pdf.save('hub-report.pdf');
     };
 
     const responsiveDrawer = (
@@ -191,7 +237,7 @@ function Hublist() {
                 </Collapse>
             </List>
             <Divider />
-        
+
             <Typography
                 sx={{
                     backgroundColor: "blue",
@@ -255,10 +301,28 @@ function Hublist() {
                     mt: 8, // Adjust margin top to create space for the app bar
                 }}
             >
+            <br></br> <br></br> <br></br> <br></br>
                 <Grid container spacing={1} justifyContent="center">
                     <Grid item xs={12} sm={8}>
-                        <TableContainer component={Paper}>
-                            <Table>
+                  
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                            <TextField
+                                label="Search by Name"
+                                variant="outlined"
+                                size="small"
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                            />
+                            
+                            <IconButton color="primary" onClick={() => setSearchTerm("")}>
+                                <Clear />
+                            </IconButton>
+                            <Button variant="contained" color="primary" onClick={generatePDF}>
+                                Generate PDF
+                            </Button>
+                            </Box>
+                    <TableContainer component={Paper} id="table-to-pdf" height="250" border="300px" borderRadius="2px">
+                    <Table>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>ID</TableCell>
@@ -270,19 +334,25 @@ function Hublist() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {hubs.map((hub, index) => (
-                                        <TableRow key={index}>
+                                {filteredHubs.map((hub, index) => (
+                                    <TableRow key={index}>
+                                    
                                             <TableCell scope="row">{index + 1}</TableCell>
                                             <TableCell>{hub.name}</TableCell>
                                             <TableCell>{hub.location}</TableCell>
                                             <TableCell>{hub.contact}</TableCell>
                                             <TableCell>
+                                                <IconButton component={Link} to={`/editList/${hub.id}`} color="primary">
+                                                    <Edit />
+                                                </IconButton>
+                                        
+
                                                 <IconButton color="error" onClick={() => deleteHub(hub.id)}>
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </TableCell>
 
-                     
+
                                         </TableRow>
                                     ))}
                                 </TableBody>

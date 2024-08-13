@@ -38,6 +38,10 @@ import ViewClass from './components/class_management/ViewClass';
 import Addannounc from './components/Announcement/Addannounc';
 import ViewClass2 from './components/class_management/ViewClass2';
 import FileUpload from './components/teacher/Uploadfile'; 
+import EventAdd from './components/Event/EventAdd';
+import EventView from './components/Event/EventView';
+import StudentList from './components/report/jpdf';
+import Hublist from './components/HUB/List';
 
 
 function App() {
@@ -48,7 +52,7 @@ function App() {
           path="/"
           element={
             <>
-              <Login/>
+              <Hublist/>
               {/* <div style={{ marginTop: '0px' }}>
                 <Home2 />
               </div>
@@ -61,16 +65,20 @@ function App() {
         <Route path="/addclass" element={<ClassAdd />} />
         <Route path="/ResurceView" element={<ResourceView />} />
         <Route path="/ViewClass" element={<ViewClass />} />
+        <Route path="/eventview" element={<EventView/>} />
         <Route path="/ViewClass2" element={<ViewClass2 />} />
         <Route path="/edduser" element={<Edduser />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/resrcadd" element={<ResourceAdd />} />
         <Route path="/addschool" element={<Addschools />} />
+        <Route path="/addevent" element={<EventAdd />} />
         <Route path="/viewSChool" element={<SchoolView />} />
         <Route path="/edituser/:id" element={<Edituser />} />
         <Route path="/editresource/:id" element={<ResourceAdd />} />
         <Route path="/editcategory/:id" element={<ClassAdd/>} />
         <Route path="/editActivity/:id" element={<AddActivity />} />
+        <Route path="/editevent/:id" element={<EventAdd />} />
+        <Route path="/editList/:id" element={<Hubtable/>} />
         <Route path="/viewspecific" element={<Viewspecific />} />
         <Route path="/addhub" element={<Hubtable />} />
         <Route path="/editadmin/:id" element={<Editadmin />} />

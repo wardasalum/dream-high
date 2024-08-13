@@ -29,85 +29,54 @@ const HubForm = () => {
     contact: "",
     location: "",
   });
-  const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
 
+  
+  const { contact, name, location} = hub;
   useEffect(() => {
     if (id) {
-      fetchHub(id);
+        fetchHub(id);
     }
-    loadHubs();
-  }, [id]);
+}, [id]);
 
-  const fetchHub = async (id) => {
-    const response = await axios.get(`http://localhost:8080/hub/${id}`);
-    setHub(response.data);
-    // Scroll to the top of the form
-    formRef.current.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const loadHubs = async () => {
-    const result = await axios.get("http://localhost:8080/hubs");
-    setHubs(result.data);
-  };
-
-  const deleteHub = async (id) => {
-    await axios.delete(`http://localhost:8080/hub/${id}`);
-    loadHubs();
-  };
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-
-    const validationErrors = validateForm(hub);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-    } else {
-      if (id) {
-        await axios.put(`http://localhost:8080/hub/${id}`, hub);
-        setSuccessMessage("Data successfully updated.");
-      } else {
-        await axios.post("http://localhost:8080/hub", hub);
-     
-        setSuccessMessage("Data successfully saved.");
-        setShowSuccess(true);
-        setHub({
-          name: "",
-          contact: "",
-          location: ""
-        });
-      }
-      loadHubs();
-      setErrors({});
-      setTimeout(() => {
-        setSuccessMessage("");
-        setShowSuccess(false);
-      }, 3000);
+const fetchHub = async (id) => {
+    try {
+        const response = await axios.get(`http://localhost:8080/hub/${id}`);
+        setHub(response.data); // Assuming response.data contains the activity details
+    } catch (error) {
+        console.error("Error fetching activity: ", error);
+        // Handle error, e.g., redirect or show error message
     }
-  };
+};
 
-  const onInputChange = (e) => {
+const onInputChange = (e) => {
     setHub({ ...hub, [e.target.name]: e.target.value });
-  };
+};
 
-  const validateForm = (formData) => {
-    let errors = {};
-
-    if (!formData.name.trim()) {
-      errors.name = "Name is required.";
+const onSubmit = async (e) => {
+    e.preventDefault();
+    // Check if any field is empty
+    if (! name || !contact || !location) {
+        alert("Please fill in all fields");
+        return;
     }
-
-    if (!formData.location.trim()) {
-      errors.location = "Location is required.";
+    try {
+        if (id) {
+            await axios.put(`http://localhost:8080/hub/${id}`, hub);
+            alert("Hub updated successfully!");
+        } else {
+            await axios.post("http://localhost:8080/hub", hub);
+            alert("Hub added successfully!");
+        }
+        navigate("/hublist");
+    } catch (error) {
+        console.error("Error adding/updating activity: ", error);
+        alert("Failed to add/update Hub. Please try again.");
     }
+};
 
-    if (!formData.contact.trim()) {
-      errors.contact = "Contact is required.";
-    }
 
-    return errors;
-  };
+
+  
 
   return (
     <div ref={formRef}>
@@ -117,29 +86,26 @@ const HubForm = () => {
             <Typography variant="h5" gutterBottom>
               Form
             </Typography>
-            {showSuccess && <Typography style={{ color: "green" }}>{successMessage}</Typography>}
-            <form onSubmit={(e) => onSubmit(e)}>
+        <Typography style={{ color: "green" }}></Typography>
+            <form onSubmit={onSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label="Name"
                     name="name"
-                    value={hub.name}
-                    onChange={(e) => onInputChange(e)}
-                    error={!!errors.name}
-                    helperText={errors.name}
-                  />
+                    value={name}
+                    onChange={onInputChange} />
+                   
+                
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label="Location"
                     name="location"
-                    value={hub.location}
-                    onChange={(e) => onInputChange(e)}
-                    error={!!errors.location}
-                    helperText={errors.location}
+                    value={location}
+                    onChange={onInputChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -147,16 +113,13 @@ const HubForm = () => {
                     fullWidth
                     label="Contact"
                     name="contact"
-                    value={hub.contact}
-                    onChange={(e) => onInputChange(e)}
-                    error={!!errors.contact}
-                    helperText={errors.contact}
-                  />
+                    value={contact}
+                    onChange={onInputChange} />
+            
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Button type="submit" variant="contained" color="primary" onClick={() => formRef.current.scrollIntoView({ behavior: "smooth" })}>
-                    {id ? 'Update' : 'Add'}
+                  <Button type="submit" variant="contained" color="primary" >{id ? 'UPDATE' : 'ADD'}
                   </Button>
                 </Grid>
               </Grid>
@@ -164,37 +127,6 @@ const HubForm = () => {
           </Paper>
         </Grid>
         <Grid item xs={12} sm={8}>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Contact</TableCell>
-                  <TableCell>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {hubs.map((hub, index) => (
-                  <TableRow key={index}>
-                    <TableCell scope="row">{index + 1}</TableCell>
-                    <TableCell>{hub.name}</TableCell>
-                    <TableCell>{hub.location}</TableCell>
-                    <TableCell>{hub.contact}</TableCell>
-                    <TableCell>
-                      <IconButton color="primary" onClick={() => fetchHub(hub.id)}>
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton color="error" onClick={() => deleteHub(hub.id)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
         </Grid>
       </Grid>
     </div>
@@ -202,3 +134,4 @@ const HubForm = () => {
 }
 
 export default HubForm;
+

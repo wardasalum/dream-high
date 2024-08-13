@@ -57,6 +57,7 @@ function Dash() {
     const [resourceCount, setResourceCount] = useState(0);
     const [schoolCount, setSchoolCount] = useState(0);
     const [activityCount, setActivityCount] = useState(0);
+    const [teacherCount, setTeacherCount] = useState(0);
     const [notifications, setNotifications] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [popupMessage, setPopupMessage] = useState('');
@@ -119,24 +120,6 @@ function Dash() {
         setAnchorEl(null);
     };
 
-    // useEffect(() => {
-    //     // Fetch initial notifications
-    //     axios.get("http://localhost:8080/approved")
-    //         .then(response => {
-    //             const initialNotifications = response.data.map(approved_notification => ({
-    //                 ...approved_notification,
-    //                 read: false  // Add a 'read' property to each notification
-    //             }));
-    //             setNotifications(initialNotifications);
-    //         })
-    //         .catch(error => {
-    //             console.error("Error fetching notifications:", error);
-    //         });
-    // }, []);
-
- 
-    
-
     useEffect(() => {
         axios.get("http://localhost:8080/resources")
             .then(response => {
@@ -160,6 +143,14 @@ function Dash() {
             })
             .catch(error => {
                 console.error("Error fetching activity count:", error);
+            });
+
+            axios.get("http://localhost:8080/teachers")
+            .then(response => {
+                setTeacherCount(response.data.length);
+            })
+            .catch(error => {
+                console.error("Error fetching teachercount:", error);
             });
 
         axios.get("http://localhost:8080/approved")
@@ -413,12 +404,12 @@ function Dash() {
                     <Grid item xs={12} sm={6} md={4}>
                         <Card sx={{ maxWidth: 250, margin: "auto" }}>
                             <CardContent>
-                                <img src='/images/school.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
+                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
                                 <Typography gutterBottom variant="h5" component="div">
-                                    Resource
+                                    Teacher
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    Total: {resourceCount}
+                                    Total: {teacherCount}
                                 </Typography>
                             </CardContent>
                         </Card>

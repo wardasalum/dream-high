@@ -54,7 +54,8 @@ function  Userdash() {
     const [postsOpen, setPostsOpen] = useState(false);
     const [pickArticleOpen, setPickArticleOpen] = useState(false);
     const [improveOpen, setImproveOpen] = useState(false);
-    const [resourceCount, setResourceCount] = useState(0);
+    const [eventCount, seteventCount] = useState(0);
+    const [ResounceCount, setResourceCount] = useState(0);
     const [notifications, setNotifications] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [hubCount, setHubCount] = useState(0); // Initialize hub count state
@@ -114,6 +115,15 @@ function  Userdash() {
                     .catch(error => {
                         console.error("Error fetching hub count:", error);
                     });
+
+                    //fetch event from backend
+                    axios.get("http://localhost:8080/events")
+                    .then(response => {
+                        seteventCount(response.data.length); // Set the total number of hubs
+                    })
+                    .catch(error => {
+                        console.error("Error fetching event count:", error);
+                    });
           
                     
                 // Fetch the total number of requests from the backend API
@@ -136,20 +146,6 @@ function  Userdash() {
         setAnchorEl(null);
     };
 
-    useEffect(() => {
-        // Fetch initial notifications
-        axios.get("http://localhost:8080/notifications")
-            .then(response => {
-                const initialNotifications = response.data.map(notification => ({
-                    ...notification,
-                    read: false  // Add a 'read' property to each notification
-                }));
-                setNotifications(initialNotifications);
-            })
-            .catch(error => {
-                console.error("Error fetching notifications:", error);
-            });
-    }, []);
 
     useEffect(() => {
         axios.get("http://localhost:8080/resources")
@@ -213,7 +209,23 @@ function  Userdash() {
                         </ListItemButton>
                     </List>
                 </Collapse>
-               
+                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPostsOpen)}>
+                    <ListItemIcon sx={{ color: "white" }}>
+                        <SchoolRoundedIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Event and Activity Management" />
+                    {postsOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
+                </ListItemButton>
+                <Collapse in={postsOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addevent">
+                            <ListItemText primary="AddEvent" />
+                        </ListItemButton>
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/eventview">
+                            <ListItemText primary="viewEvent" />
+                        </ListItemButton>
+                    </List>
+                </Collapse>
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setImproveOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <Edit />
@@ -231,23 +243,7 @@ function  Userdash() {
                         </ListItemButton>
                     </List>
                 </Collapse>
-                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPostsOpen)}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <SchoolRoundedIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Event and Activity Management" />
-                    {postsOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
-                </ListItemButton>
-                <Collapse in={postsOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
-                            <ListItemText primary="ANNOUNCEMENT" />
-                        </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewhub">
-                            <ListItemText primary="view hub" />
-                        </ListItemButton>
-                    </List>
-                </Collapse>
+               
             </List>
             <Divider />
             <div onClick={handleLogout}>
@@ -353,7 +349,7 @@ function  Userdash() {
                             <CardContent>
                                 <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
                                 <Typography gutterBottom variant="h5" component="div">
-                                    Hub Count
+                                    Hub 
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                     Total Hubs {hubCount}
@@ -367,10 +363,10 @@ function  Userdash() {
                             <CardContent>
                                 <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
                                 <Typography gutterBottom variant="h5" component="div">
-                              Request Count
+                              Request 
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                            Total Request: {RequestCount}
+                            Total Requests : {RequestCount}
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -384,10 +380,10 @@ function  Userdash() {
                             <CardContent>
                                 <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
                                 <Typography gutterBottom variant="h5" component="div">
-
+                            Event
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-
+                            Total Events :{eventCount}
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -397,7 +393,7 @@ function  Userdash() {
                             <CardContent>
                                 <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
                                 <Typography gutterBottom variant="h5" component="div">
-
+                
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
 

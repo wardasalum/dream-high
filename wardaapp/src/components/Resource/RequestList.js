@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import AppBar from "@mui/material/AppBar";
 import {
     BrowserRouter as Router,
@@ -35,10 +37,11 @@ import {
     TableHead,
     TableRow,
     TextField,
+    Button,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { CollectionsBookmark, Edit, Feedback, ForkLeft, Help, PermMedia, UploadFile, Work, Clear } from "@mui/icons-material"; // Import Clear from '@mui/icons-material'
+import { CollectionsBookmark, Edit, Feedback, ForkLeft, Help, PermMedia, UploadFile, Work, Clear } from "@mui/icons-material";
 
 const drawWidth = 220;
 
@@ -102,6 +105,7 @@ function RequestView() {
     const handleDropdownToggle = (setDropdownOpen) => {
         setDropdownOpen((prevState) => !prevState);
     };
+    
     const handleApprove = async (id) => {
         try {
             const response = await axios.put(`http://localhost:8080/requests/${id}/approve`);
@@ -111,6 +115,43 @@ function RequestView() {
             console.error('Error approving request:', error);
         }
     };
+
+  
+
+    //generate report
+    const generatePDF = async () => {
+        const input = document.getElementById('table-to-pdf');
+    
+        // Generate canvas from HTML
+        const canvas = await html2canvas(input);
+        const imgData = canvas.toDataURL('image/png');
+    
+        // A4 size in mm
+        const pdfWidth = 172;
+        const pdfHeight = 297;
+    
+        // Create a new jsPDF instance with A4 size
+        const pdf = new jsPDF({
+            orientation: 'portrait', // or 'landscape'
+            unit: 'mm',
+            format: [pdfWidth, pdfHeight]
+        });
+    
+        // Add a title to the PDF
+        pdf.setFontSize(16);
+        pdf.text('Request List Report', 85, 15, { align: 'center' });
+    
+        // Add image of the table to PDF
+        const imgWidth = 190; // Adjust to fit the page width
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+        // Adjust the position of the image to leave space for the title
+        pdf.addImage(imgData, 'PNG', 10, 20, imgWidth, imgHeight);
+    
+        // Save the PDF
+        pdf.save('requests-report.pdf');
+    };
+
     const responsiveDrawer = (
         <div style={{ backgroundColor: "#09212E", height: "100%" }}>
             <Toolbar />
@@ -270,16 +311,19 @@ function RequestView() {
                             <IconButton color="primary" onClick={() => setSearchTerm("")}>
                                 <Clear />
                             </IconButton>
+                            <Button variant="contained" color="primary" onClick={generatePDF}>
+                                Generate PDF
+                            </Button>
                         </Box>
-                        <TableContainer component={Paper}>
+                        <TableContainer component={Paper} id="table-to-pdf" height="250" border="300px" borderRadius="2px">
                             <Table>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>ID</TableCell>
                                         <TableCell>Name</TableCell>
                                         <TableCell>Description</TableCell>
-                                        <TableCell>quantity</TableCell>
-                                        <TableCell>status</TableCell>
+                                        <TableCell>Quantity</TableCell>
+                                        <TableCell>Status</TableCell>
                                         <TableCell>Action</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -294,7 +338,6 @@ function RequestView() {
                                             <TableCell>
                                                 <IconButton color="error" onClick={() => deleteRequest(request.id)}>
                                                     <DeleteIcon />
-                                                    
                                                 </IconButton>
                                             </TableCell>
                                         </TableRow>
@@ -310,3 +353,5 @@ function RequestView() {
 }
 
 export default RequestView;
+
+

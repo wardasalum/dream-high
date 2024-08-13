@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "flowbite-react": "^0.9.0",
     "formik": "^2.4.6",
+    "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "material-icon": "^0.1.4",
     "material-react-table": "^2.13.0",
