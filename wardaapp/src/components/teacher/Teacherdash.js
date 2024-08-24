@@ -6,7 +6,6 @@ import {
     Route,
     Link,
     useNavigate,
-
 } from "react-router-dom";
 import axios from "axios";
 import Box from "@mui/material/Box";
@@ -28,38 +27,38 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import Grid from "@mui/material/Grid"; // Add this line
-
+import Grid from "@mui/material/Grid";
+import Menu from "@mui/material/Menu";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import Badge from "@mui/material/Badge";
+import MenuItem from "@mui/material/MenuItem";
 import {
-    CollectionsBookmark,
-    Edit,
-    Feedback,
-    ForkLeft,
-    Help,
-    PermMedia,
     UploadFile,
-    Work,
 } from "@mui/icons-material";
 
 const drawWidth = 220;
 
 function Teacherdash() {
-    const [drawerOpen, setDrawerOpen] = React.useState(false);
-    const [howToWriteOpen, setHowToWriteOpen] = React.useState(false);
-    const [postsOpen, setPostsOpen] = React.useState(false);
-    const [pickArticleOpen, setPickArticleOpen] = React.useState(false);
-    const [improveOpen, setImproveOpen] = React.useState(false);
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [howToWriteOpen, setHowToWriteOpen] = useState(false);
+    const [postsOpen, setPostsOpen] = useState(false);
+    const [pickArticleOpen, setPickArticleOpen] = useState(false);
+    const [popupMessage, setPopupMessage] = useState('');
+    const [popupOpen, setPopupOpen] = useState(false);
     const [adminCount, setAdminCount] = useState(0);
-    const [hubCount, setHubCount] = useState(0); // Initialize hub count state
+    const [notifications, setNotifications] = useState([]);
+ const [unreadCount, setUnreadCount] = useState(0);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [hubCount, setHubCount] = useState(0); 
     const [announcements, setAnnouncements] = useState([]);
+    const open = Boolean(anchorEl);
     
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch the total number of admins from the backend API
         axios.get("http://localhost:8080/")
             .then(response => {
-                setAdminCount(response.data.length); // Set the total number of admins
+                setAdminCount(response.data.length); 
             })
             .catch(error => {
                 console.error("Error fetching admin count:", error);
@@ -67,10 +66,9 @@ function Teacherdash() {
     }, []);
 
     useEffect(() => {
-        // Fetch the total number of hubs from the backend API
         axios.get("http://localhost:8080/hubs")
             .then(response => {
-                setHubCount(response.data.length); // Set the total number of hubs
+                setHubCount(response.data.length); 
             })
             .catch(error => {
                 console.error("Error fetching hub count:", error);
@@ -86,16 +84,79 @@ function Teacherdash() {
         setDropdownOpen(prevState => !prevState);
     };
 
-   
-    const handleLogout = () => {
-        // Perform logout logic here (e.g., clearing session, etc.)
-        // Redirect to the login page
-        navigate('/login');
+    const handleNotificationsClick = (event) => {
+        setAnchorEl(event.currentTarget);
     };
 
+    // const handleNotificationClick = (index) => {
+    //     const updatedNotifications = [...notifications];
+    //     updatedNotifications[index].read = true;
+    //     setNotifications(updatedNotifications);
+
+    //     setPopupMessage(updatedNotifications[index].message);
+    //     setPopupOpen(true);
+
+
+    //  };
+     
+
+     const handlePopupClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setPopupOpen(false);
+    };
+
+    const handleNotificationsClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleLogout = () => {
+        navigate('/login');
+    };
+    // axios.get("http://localhost:8080/activities")
+    // .then(response => {
+    //     const initialNotifications = response.data.map(notification => ({
+    //         ...notification,
+    //         read: false  // Add a 'read' property to each notification
+    //     }));
+    //     setNotifications(initialNotifications);
+    // })
+    // .catch(error => {
+    //     console.error("Error fetching notifications:", error);
+    // });
+   
+ // Fetch notifications from the backend
+ useEffect(() => {
+    axios.get("http://localhost:8080/activities")
+        .then(response => {
+            const initialNotifications = response.data.map(notification => ({
+                ...notification,
+                read: false  // Assume all fetched notifications are unread
+            }));
+            setNotifications(initialNotifications);
+            setUnreadCount(initialNotifications.length); // Set the initial unread count
+        })
+        .catch(error => {
+            console.error("Error fetching notifications:", error);
+        });
+}, []);
+
+const handleNotificationClick = (index) => {
+    const updatedNotifications = [...notifications];
+    if (!updatedNotifications[index].read) {
+        updatedNotifications[index].read = true;
+        setNotifications(updatedNotifications);
+        setUnreadCount(prevCount => prevCount - 1); // Decrease unread count
+    }
+
+    setPopupMessage(updatedNotifications[index].message);
+    setPopupOpen(true);
+};
+    
 
     const responsiveDrawer = (
-        <div style={{ backgroundColor: "#09212E", height: "80%" }}>
+        <div style={{ backgroundColor: "#09212E", height: "100%" }}>
             <Toolbar />
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
                 <img src='/images/computer.png' alt="Computer" style={{ width: "60%", maxWidth: "200px", height: "75%" }} />
@@ -103,15 +164,12 @@ function Teacherdash() {
             <Divider />
 
             <List sx={{ backgroundColor: "#09212E" }}>
-                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setHowToWriteOpen)}>
+                <ListItemButton component={Link} to="/teacher" sx={{ color: "white" }} onClick={() => handleDropdownToggle(setHowToWriteOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <SupervisorAccountRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Overview Section" component={Link} to="/userdash"/>
-                   
+                    <ListItemText primary="Overview Section" />
                 </ListItemButton>
-                
-                  
                 
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
@@ -125,9 +183,9 @@ function Teacherdash() {
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/ViewClass">
                             <ListItemText primary="View" />
                         </ListItemButton> 
-                         
                     </List>
                 </Collapse>
+
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <UploadFile />
@@ -136,8 +194,8 @@ function Teacherdash() {
                     {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
+                    <List component="div" disablePadding>
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
                             <ListItemText primary="upload" />
                         </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
@@ -145,55 +203,23 @@ function Teacherdash() {
                         </ListItemButton>  
                     </List>
                 </Collapse>
-                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setImproveOpen)}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <Edit />
-                    </ListItemIcon>
-                    <ListItemText primary="Reports and Analytics" />
-                    {improveOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
-                </ListItemButton>
-                <Collapse in={improveOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve1">
-                            <ListItemText primary="" />
-                        </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve2">
-                            <ListItemText primary="" />
-                        </ListItemButton>
-                    </List>
-                </Collapse>
-                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPostsOpen)}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <SchoolRoundedIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Announcement" />
-                    {postsOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
-                </ListItemButton>
-                <Collapse in={postsOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/resrcadd">
-                            <ListItemText primary="ANNOUNCEMENT" />
-                        </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewhub">
-                            <ListItemText primary="view hub" />
-                        </ListItemButton>
-                    </List>
-                </Collapse>
+         
+               
             </List>
             <Divider />
-          <div onClick={handleLogout}>
-            <Typography
-                sx={{
-                    backgroundColor: "blue",
-                    color: "white",
-                    borderRadius: 10,
-                    textAlign: "center",
-                    padding: 1,
-                    margin: 2,
-                }}
-            >
-                Logout
-            </Typography>
+            <div onClick={handleLogout}>
+                <Typography
+                    sx={{
+                        backgroundColor: "blue",
+                        color: "white",
+                        borderRadius: 10,
+                        textAlign: "center",
+                        padding: 1,
+                        margin: 2,
+                    }}
+                >
+                    Logout
+                </Typography>
             </div>
         </div>
     );
@@ -217,9 +243,33 @@ function Teacherdash() {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6">
+                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
                         Dashboard
                     </Typography>
+                    <IconButton
+                        color="inherit"
+                        onClick={handleNotificationsClick}
+                    >
+                        <Badge badgeContent={notifications.filter(notification => !notification.read).length} color="error">
+                            <NotificationsIcon />
+                        </Badge>
+                    </IconButton >
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleNotificationsClose}
+                    >
+                        {notifications.length > 0 ? (
+                            notifications.map((approved, index) => (
+                                <MenuItem key={index} onClick={() => handleNotificationClick(index)}>
+                                    {approved.read ? "" : <strong>{approved.description}</strong>}
+                                    {approved.read ? approved.message : ""}
+                                </MenuItem>
+                            ))
+                        ) : (
+                            <MenuItem disabled>No new notifications</MenuItem>
+                        )}
+                    </Menu>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -246,75 +296,14 @@ function Teacherdash() {
                     mt: 8, // Adjust margin top to create space for the app bar
                 }}
             >
-                <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                                    Hub Count
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Total Hubs {hubCount}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                            
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                   
-                </Grid>
-                <br></br> <br></br>
-                <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                              
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                  
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                                
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                   
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
+                
                       
               
-                    
-                </Grid>
-            </Box>
+          </Box>
         </Box>
     );
 }
 
 export default Teacherdash;
-
-
 
 

@@ -82,17 +82,16 @@ function  Userdash() {
         setAnchorEl(event.currentTarget);
     };
 
-
     const handleNotificationClick = (index) => {
         // Mark notification as read
         const updatedNotifications = [...notifications];
         updatedNotifications[index].read = true;
         setNotifications(updatedNotifications);
-
+    
         // Show popup message
         setPopupMessage(updatedNotifications[index].message);
         setPopupOpen(true);
-
+    
         // Delete notification from database
         const notificationId = updatedNotifications[index].id; // Assuming 'id' is the unique identifier for notifications
         axios.delete(`http://localhost:8080/notification/${notificationId}`)
@@ -101,12 +100,17 @@ function  Userdash() {
                 // Remove clicked notification from list
                 updatedNotifications.splice(index, 1);
                 setNotifications(updatedNotifications);
+    
+                // Navigate to the request approval page
+                navigate('/reguestapprv'); // Replace '/reguestapprv' with the actual path to your request approval page
             })
             .catch(error => {
                 console.error("Error deleting notification:", error);
             });
     };
-   
+    
+
+ 
                 // Fetch the total number of hubs from the backend API
                 axios.get("http://localhost:8080/hubs")
                     .then(response => {
@@ -204,9 +208,7 @@ function  Userdash() {
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
                             <ListItemText primary="View" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguestapprv">
-                            <ListItemText primary="Request list" />
-                        </ListItemButton>
+                      
                     </List>
                 </Collapse>
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPostsOpen)}>
@@ -230,17 +232,15 @@ function  Userdash() {
                     <ListItemIcon sx={{ color: "white" }}>
                         <Edit />
                     </ListItemIcon>
-                    <ListItemText primary="Reports and Analytics" />
+                    <ListItemText primary="Request List" />
                     {improveOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
                 <Collapse in={improveOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve1">
-                            <ListItemText primary="" />
+                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguestapprv">
+                            <ListItemText primary="List" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve2">
-                            <ListItemText primary="" />
-                        </ListItemButton>
+                       
                     </List>
                 </Collapse>
                
@@ -343,65 +343,51 @@ function  Userdash() {
                     mt: 8,
                 }}
             >
-                <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                                    Hub 
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Total Hubs {hubCount}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
+<br></br><br></br><br></br><br></br>
+                <Grid container spacing={6} justifyContent="center">
+    <Grid item xs={12} sm={6} md={4}>
+        <Card sx={{ maxWidth: 250, margin: "auto" }}>
+            <CardContent>
+                <img src='/images/house.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
+                <Typography gutterBottom variant="h5" component="div">
+                    Hub 
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    Total Hubs {hubCount}
+                </Typography>
+            </CardContent>
+        </Card>
+    </Grid>
 
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                              Request 
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                            Total Requests : {RequestCount}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
+    <Grid item xs={12} sm={6} md={4}>
+        <Card sx={{ maxWidth: 250, margin: "auto" }}>
+            <CardContent>
+                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
+                <Typography gutterBottom variant="h5" component="div">
+                    Request 
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    Total Requests: {RequestCount}
+                </Typography>
+            </CardContent>
+        </Card>
+    </Grid>
 
-                </Grid>
-                <br></br> <br></br>
-                <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                            Event
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                            Total Events :{eventCount}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 250, margin: "auto" }}>
-                            <CardContent>
-                                <img src='/images/computer.png' alt="Computer" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
-                                <Typography gutterBottom variant="h5" component="div">
-                
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
+    <Grid item xs={12} sm={2} md={4}>
+        <Card sx={{ maxWidth: 250, margin: "auto" }}>
+            <CardContent>
+                <img src='/images/event.png' alt="Event" style={{ width: "40%", maxWidth: "200px", height: "75%" }} />
+                <Typography gutterBottom variant="h5" component="div">
+                    Event
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    Total Events: {eventCount}
+                </Typography>
+            </CardContent>
+        </Card>
+    </Grid>
+</Grid>
 
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
             </Box>
 
             {/* Snackbar for displaying popup message */}

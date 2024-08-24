@@ -39,7 +39,6 @@ export default function Addschools() {
     const onInputChange = (e) => {
         setSchool({ ...school, [e.target.name]: e.target.value });
     };
-
     const onSubmit = async (e) => {
         e.preventDefault();
         // Check if any field is empty
@@ -48,22 +47,46 @@ export default function Addschools() {
             return;
         }
         try {
-            await axios.post("http://localhost:8080/school", school);
-            // After successful submission, clear the form fields
-            setSchool({
-                category: "",
-                name: "",
-               number_females: "",
-               number_males : ""
-
-            });
-            alert("School added successfully!");
-            navigate("/viewSChool");
+            if (id) {
+                await axios.put(`http://localhost:8080/school/${id}`, school);
+                alert("School updated successfully!");
+            } else {
+                await axios.post("http://localhost:8080/school", school);
+                alert("School added successfully!");
+            }
+        
+            navigate("/viewSChool");;
         } catch (error) {
-            console.error("Error adding school: ", error);
-            alert("Failed to add school. Please try again.");
+            console.error("Error adding/updating school: ", error);
+            alert("Failed to add/update school. Please try again.");
         }
     };
+
+
+    // const onSubmit = async (e) => {
+    //     e.preventDefault();
+    //     // Check if any field is empty
+    //     if (!category || !name || ! number_females || ! number_males) {
+    //         alert("Please fill in all fields");
+    //         return;
+    //     }
+    //     try {
+    //         await axios.post("http://localhost:8080/school", school);
+    //         // After successful submission, clear the form fields
+    //         setSchool({
+    //             category: "",
+    //             name: "",
+    //            number_females: "",
+    //            number_males : ""
+
+    //         });
+    //         alert("School added successfully!");
+    //         navigate("/viewSChool");
+    //     } catch (error) {
+    //         console.error("Error adding school: ", error);
+    //         alert("Failed to add school. Please try again.");
+    //     }
+    // };
 
     return (
         <div className='Container'>
@@ -73,7 +96,7 @@ export default function Addschools() {
 
                     <MDBCard className='m-9' style={{ maxWidth: '700px' }}>
                         <MDBCardBody className='px-5 py-4'>
-                            <h2 className="text-uppercase text-center mb-4">ADD RESOURCES</h2>
+                            <h2 className="text-uppercase text-center mb-4">ADD SCHOOL</h2>
                             {/* Dropdown for Type */}
                             <div className='mb-3'>
                                 <label htmlFor='type' className='form-label'>Categories</label>
@@ -100,8 +123,7 @@ export default function Addschools() {
 
                             <MDBInput wrapperClass='mb-3' label='male' size='md' id='form2' type='text' name='number_males' required value={number_males}
                                 onChange={(e) => onInputChange(e)} />
-
-                            <Button className='mb-3 w-100 gradient-custom-4' size='md' type='submit'>ADD</Button>
+                            <Button className='mb-3 w-100 gradient-custom-4' size='md' type='submit'>{id ? 'UPDATE' : 'ADD'}</Button>
                         </MDBCardBody>
                     </MDBCard>
                 </MDBContainer>

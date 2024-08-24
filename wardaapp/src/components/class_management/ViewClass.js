@@ -21,9 +21,15 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import Typography from "@mui/material/Typography";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import {
+  
+    Button,
+} from '@mui/material';
 import Grid from "@mui/material/Grid";
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -116,6 +122,39 @@ const deleteCategory = async (id) => {
         }
     }
 };
+//generate report
+const generatePDF = async () => {
+    const input = document.getElementById('table-to-pdf');
+
+    // Generate canvas from HTML
+    const canvas = await html2canvas(input);
+    const imgData = canvas.toDataURL('image/png');
+
+    // A4 size in mm
+    const pdfWidth = 160;
+    const pdfHeight = 297;
+
+    // Create a new jsPDF instance with A4 size
+    const pdf = new jsPDF({
+        orientation: 'portrait', // or 'landscape'
+        unit: 'mm',
+        format: [pdfWidth, pdfHeight]
+    });
+
+    // Add a title to the PDF
+    pdf.setFontSize(16);
+    pdf.text('Class Report', 85, 15, { align: 'center' });
+
+    // Add image of the table to PDF
+    const imgWidth = 190; // Adjust to fit the page width
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    // Adjust the position of the image to leave space for the title
+    pdf.addImage(imgData, 'PNG', 10, 20, imgWidth, imgHeight);
+
+    // Save the PDF
+    pdf.save('class-report.pdf');
+};
 
 
     const responsiveDrawer = (
@@ -125,8 +164,9 @@ const deleteCategory = async (id) => {
                 <img src='/images/computer.png' alt="Computer" style={{ width: "60%", maxWidth: "200px", height: "75%" }} />
             </Box>
             <Divider />
+           
             <List sx={{ backgroundColor: "#09212E" }}>
-                <ListItemButton sx={{ color: "white" }} component={Link} to="/teacher">
+                <ListItemButton component={Link} to="/teacher" sx={{ color: "white" }} onClick={() => handleDropdownToggle(setHowToWriteOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <SupervisorAccountRoundedIcon />
                     </ListItemIcon>
@@ -145,15 +185,10 @@ const deleteCategory = async (id) => {
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addclass">
-                            <ListItemText primary="ADD" />
-                        </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/ViewClass">
                             <ListItemText primary="View" />
                         </ListItemButton> 
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguestapprv">
-                            <ListItemText primary="" />
-                        </ListItemButton>   
+                         
                     </List>
                 </Collapse>
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
@@ -166,7 +201,7 @@ const deleteCategory = async (id) => {
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
-                            <ListItemText primary="ADD" />
+                            <ListItemText primary="upload" />
                         </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
                             <ListItemText primary="View" />
@@ -210,18 +245,7 @@ const deleteCategory = async (id) => {
             </List>
             <Divider />
 
-            <Typography
-                sx={{
-                    backgroundColor: "blue",
-                    color: "white",
-                    borderRadius: 10,
-                    textAlign: "center",
-                    padding: 1,
-                    margin: 2,
-                }}
-            >
-                Logout
-            </Typography>
+        
         </div>
     );
 
@@ -273,7 +297,7 @@ const deleteCategory = async (id) => {
                     mt: 8, // Adjust margin top to create space for the app bar
                 }}
             >
-                <Grid container spacing={1} justifyContent="center">
+                        <Grid container spacing={1} justifyContent="center">
                     <Grid item xs={12} sm={8}>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
                             <TextField
@@ -286,8 +310,11 @@ const deleteCategory = async (id) => {
                             <IconButton color="primary" onClick={() => setSearchTerm("")}>
                                 <Clear />
                             </IconButton>
-                        </Box>
-                        <TableContainer component={Paper}>
+                            <Button variant="contained" color="primary" onClick={generatePDF}>
+                                Generate PDF
+                            </Button>
+                            </Box>
+                        <TableContainer component={Paper} id="table-to-pdf" height="250" border="300px" borderRadius="2px">
                             <Table>
                                 <TableHead>
                                     <TableRow>

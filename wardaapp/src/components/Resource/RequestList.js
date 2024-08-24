@@ -227,26 +227,8 @@ function RequestView() {
                 </Collapse>
             </List>
             <Divider />
-            <List>
-                <ListItemButton sx={{ color: "white" }}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <Feedback />
-                    </ListItemIcon>
-                    <ListItemText primary="Contact us" />
-                </ListItemButton>
-            </List>
-            <Typography
-                sx={{
-                    backgroundColor: "blue",
-                    color: "white",
-                    borderRadius: 10,
-                    textAlign: "center",
-                    padding: 1,
-                    margin: 2,
-                }}
-            >
-                Sign In
-            </Typography>
+    
+     
         </div>
     );
 

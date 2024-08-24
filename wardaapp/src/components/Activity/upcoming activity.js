@@ -19,11 +19,11 @@ export default function AddActivity() {
     const [activity, setActivity] = useState({
         date: "",
         type: "",
-        name: "",
+        // name: "",
         description: ""
     });
 
-    const { date, type, name, description } = activity;
+    const { date, type, description } = activity;
 
     const typeOptions = [
         'Training',
@@ -54,7 +54,7 @@ export default function AddActivity() {
     const onSubmit = async (e) => {
         e.preventDefault();
         // Check if any field is empty
-        if (!type || !name || !date || !description) {
+        if (!type || !date || !description) {
             alert("Please fill in all fields");
             return;
         }
@@ -99,9 +99,6 @@ export default function AddActivity() {
                                     ))}
                                 </select>
                             </div>
-
-                            <MDBInput wrapperClass='mb-3' label='Name' size='md' id='form4' type='text' name='name' required value={name}
-                                onChange={onInputChange} />
 
                             <MDBInput wrapperClass='mb-3' label='Description' size='md' id='form2' type='text' name='description' required value={description}
                                 onChange={onInputChange} />

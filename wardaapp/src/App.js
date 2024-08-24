@@ -35,13 +35,12 @@ import AddActivity from './components/Activity/upcoming activity';
 import ActivityView from './components/Activity/ActivityView'
 import ClassAdd from './components/class_management/ClassAdd';
 import ViewClass from './components/class_management/ViewClass';
-import Addannounc from './components/Announcement/Addannounc';
-import ViewClass2 from './components/class_management/ViewClass2';
-import FileUpload from './components/teacher/Uploadfile'; 
+import ViewClass2 from './components/class_management/ViewClass2'; 
 import EventAdd from './components/Event/EventAdd';
 import EventView from './components/Event/EventView';
 import StudentList from './components/report/jpdf';
 import Hublist from './components/HUB/List';
+import Notesupload from './components/teacher/Notesupload'
 
 
 function App() {
@@ -52,11 +51,11 @@ function App() {
           path="/"
           element={
             <>
-              <Hublist/>
-              {/* <div style={{ marginTop: '0px' }}>
+              <Home/>
+              <div style={{ marginTop: '0px' }}>
                 <Home2 />
               </div>
-              <Footer /> */}
+              <Footer />
             </>
           }
         />
@@ -78,6 +77,7 @@ function App() {
         <Route path="/editcategory/:id" element={<ClassAdd/>} />
         <Route path="/editActivity/:id" element={<AddActivity />} />
         <Route path="/editevent/:id" element={<EventAdd />} />
+        <Route path="/editSchool/:id" element={<Addschools />} />
         <Route path="/editList/:id" element={<Hubtable/>} />
         <Route path="/viewspecific" element={<Viewspecific />} />
         <Route path="/addhub" element={<Hubtable />} />
@@ -95,6 +95,7 @@ function App() {
         <Route path="/reguest" element={<RequestView />} />
         <Route path="/ActivityView" element={<ActivityView />} />
         <Route path="/reguestapprv" element={<RequestApproval />} />
+        
 
 
       </Routes>

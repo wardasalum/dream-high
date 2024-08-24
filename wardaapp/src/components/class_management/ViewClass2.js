@@ -6,6 +6,12 @@ import {
     Route,
     Link,
 } from "react-router-dom";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import {
+  
+    Button,
+} from '@mui/material';
 import axios from "axios";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -115,6 +121,39 @@ const deleteCategory = async (id) => {
             console.error("Error deleting category:", error);
         }
     }
+};
+//generate report
+const generatePDF = async () => {
+    const input = document.getElementById('table-to-pdf');
+
+    // Generate canvas from HTML
+    const canvas = await html2canvas(input);
+    const imgData = canvas.toDataURL('image/png');
+
+    // A4 size in mm
+    const pdfWidth = 160;
+    const pdfHeight = 297;
+
+    // Create a new jsPDF instance with A4 size
+    const pdf = new jsPDF({
+        orientation: 'portrait', // or 'landscape'
+        unit: 'mm',
+        format: [pdfWidth, pdfHeight]
+    });
+
+    // Add a title to the PDF
+    pdf.setFontSize(16);
+    pdf.text('Class Report', 85, 15, { align: 'center' });
+
+    // Add image of the table to PDF
+    const imgWidth = 190; // Adjust to fit the page width
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    // Adjust the position of the image to leave space for the title
+    pdf.addImage(imgData, 'PNG', 10, 20, imgWidth, imgHeight);
+
+    // Save the PDF
+    pdf.save('class-report.pdf');
 };
 
 
@@ -286,8 +325,11 @@ const deleteCategory = async (id) => {
                             <IconButton color="primary" onClick={() => setSearchTerm("")}>
                                 <Clear />
                             </IconButton>
+                            <Button variant="contained" color="primary" onClick={generatePDF}>
+                                Generate PDF
+                            </Button>
                         </Box>
-                        <TableContainer component={Paper}>
+                        <TableContainer component={Paper} id="table-to-pdf" height="250" border="300px" borderRadius="2px">
                             <Table>
                                 <TableHead>
                                     <TableRow>

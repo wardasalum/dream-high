@@ -157,18 +157,17 @@ function RequestApproval() {
                 <img src='/images/computer.png' alt="Computer" style={{ width: "60%", maxWidth: "200px", height: "75%" }} />
             </Box>
             <Divider />
-       
             <List sx={{ backgroundColor: "#09212E" }}>
                 <ListItemButton component={Link} to="/userdash" sx={{ color: "white" }} onClick={() => handleDropdownToggle(setHowToWriteOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <SupervisorAccountRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Overview Section" />
-                   
+                    <ListItemText primary="Overview Section"  />
+
                 </ListItemButton>
-                
-                  
-                
+
+
+
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
                         <UploadFile />
@@ -178,49 +177,13 @@ function RequestApproval() {
                 </ListItemButton>
                 <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addadmin">
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
                             <ListItemText primary="ADD" />
                         </ListItemButton>
                         <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
                             <ListItemText primary="View" />
-                        </ListItemButton> 
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguest">
-                            <ListItemText primary="Request" />
-                        </ListItemButton>   
-                    </List>
-                </Collapse>
-                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPickArticleOpen)}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <UploadFile />
-                    </ListItemIcon>
-                    <ListItemText primary="Upcoming activities" />
-                    {pickArticleOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
-                </ListItemButton>
-                <Collapse in={pickArticleOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addadmin">
-                            <ListItemText primary="ADD" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/hublist">
-                            <ListItemText primary="View" />
-                        </ListItemButton>  
-                    </List>
-                </Collapse>
-                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setImproveOpen)}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <Edit />
-                    </ListItemIcon>
-                    <ListItemText primary="Reports and Analytics" />
-                    {improveOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
-                </ListItemButton>
-                <Collapse in={improveOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve1">
-                            <ListItemText primary="Improve 1" />
-                        </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component="a" href="#improve2">
-                            <ListItemText primary="Improve 2" />
-                        </ListItemButton>
+                      
                     </List>
                 </Collapse>
                 <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setPostsOpen)}>
@@ -232,24 +195,32 @@ function RequestApproval() {
                 </ListItemButton>
                 <Collapse in={postsOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addhub">
-                            <ListItemText primary="add hub" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/addevent">
+                            <ListItemText primary="AddEvent" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/viewhub">
-                            <ListItemText primary="view hub" />
+                        <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/eventview">
+                            <ListItemText primary="viewEvent" />
                         </ListItemButton>
                     </List>
                 </Collapse>
-            </List>
-            <Divider />
-            <List>
-                <ListItemButton sx={{ color: "white" }}>
+                <ListItemButton sx={{ color: "white" }} onClick={() => handleDropdownToggle(setImproveOpen)}>
                     <ListItemIcon sx={{ color: "white" }}>
-                        <Feedback />
+                        <Edit />
                     </ListItemIcon>
-                    <ListItemText primary="Contact us" />
+                    <ListItemText primary="Request List" />
+                    {improveOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />}
                 </ListItemButton>
-            </List>
+                <Collapse in={improveOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                    <ListItemButton sx={{ pl: 4, color: "white" }} component={Link} to="/reguestapprv">
+                            <ListItemText primary="list" />
+                        </ListItemButton>
+                       
+                    </List>
+                </Collapse>
+               </List>
+        
+            <Divider />
          
           
         </div>

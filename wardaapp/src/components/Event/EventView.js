@@ -215,19 +215,7 @@ function EventView() {
             </List>
             <Divider />
          
-           
-            <Typography
-                sx={{
-                    backgroundColor: "blue",
-                    color: "white",
-                    borderRadius: 10,
-                    textAlign: "center",
-                    padding: 1,
-                    margin: 2,
-                }}
-            >
-                Sign In
-            </Typography>
+   
         </div>
     );
 

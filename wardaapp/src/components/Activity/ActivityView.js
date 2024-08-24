@@ -90,7 +90,7 @@ function ActivityView() {
 
     // Filter activities based on search term
     const filteredActivities = activities.filter((activity) =>
-        activity.name.toLowerCase().includes(searchTerm.toLowerCase())
+        activity.type.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleDropdownToggle = (setDropdownOpen) => {
@@ -171,26 +171,8 @@ function ActivityView() {
                 </Collapse>
             </List>
             <Divider />
-            <List>
-                <ListItemButton sx={{ color: "white" }}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <Feedback />
-                    </ListItemIcon>
-                    <ListItemText primary="Contact us" />
-                </ListItemButton>
-            </List>
-            <Typography
-                sx={{
-                    backgroundColor: "blue",
-                    color: "white",
-                    borderRadius: 10,
-                    textAlign: "center",
-                    padding: 1,
-                    margin: 2,
-                }}
-            >
-                Sign In
-            </Typography>
+         
+         
         </div>
     );
 
@@ -246,7 +228,7 @@ function ActivityView() {
                     <Grid item xs={12} sm={8}>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
                             <TextField
-                                label="Search by Name"
+                                label="Search by Type"
                                 variant="outlined"
                                 size="small"
                                 value={searchTerm}
@@ -261,7 +243,7 @@ function ActivityView() {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>ID</TableCell>
-                                        <TableCell>Name</TableCell>
+                                        {/* <TableCell>Name</TableCell> */}
                                         <TableCell>Type</TableCell>
                                         <TableCell>Description</TableCell>
                                         <TableCell>Date</TableCell>
@@ -272,7 +254,7 @@ function ActivityView() {
                                     {filteredActivities.map((activity, index) => (
                                         <TableRow key={index}>
                                             <TableCell>{activity.id}</TableCell>
-                                            <TableCell>{activity.name}</TableCell>
+                                            {/* <TableCell>{activity.name}</TableCell> */}
                                             <TableCell>{activity.type}</TableCell>
                                             <TableCell>{activity.description}</TableCell>
                                             <TableCell>{activity.date}</TableCell>

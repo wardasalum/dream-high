@@ -101,11 +101,13 @@ function Dash() {
                 // Remove clicked notification from list
                 updatedNotifications.splice(index, 1);
                 setNotifications(updatedNotifications);
+                navigate('/reguest');
             })
             .catch(error => {
                 console.error("Error deleting notification:", error);
             });
      };
+     
    
  
     

@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import {
+  
+    Button,
+} from '@mui/material';
 import {
     BrowserRouter as Router,
     Routes,
@@ -116,6 +122,39 @@ function SchoolView() {
     const handleDropdownToggle = (setDropdownOpen) => {
         setDropdownOpen((prevState) => !prevState);
     };
+    //generate report
+    const generatePDF = async () => {
+        const input = document.getElementById('table-to-pdf');
+    
+        // Generate canvas from HTML
+        const canvas = await html2canvas(input);
+        const imgData = canvas.toDataURL('image/png');
+    
+        // A4 size in mm
+        const pdfWidth = 160;
+        const pdfHeight = 297;
+    
+        // Create a new jsPDF instance with A4 size
+        const pdf = new jsPDF({
+            orientation: 'portrait', // or 'landscape'
+            unit: 'mm',
+            format: [pdfWidth, pdfHeight]
+        });
+    
+        // Add a title to the PDF
+        pdf.setFontSize(16);
+        pdf.text('School Report', 85, 15, { align: 'center' });
+    
+        // Add image of the table to PDF
+        const imgWidth = 190; // Adjust to fit the page width
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+        // Adjust the position of the image to leave space for the title
+        pdf.addImage(imgData, 'PNG', 10, 20, imgWidth, imgHeight);
+    
+        // Save the PDF
+        pdf.save('School-report.pdf');
+    };
 
     const responsiveDrawer = (
         <div style={{ backgroundColor: "#09212E", height: "100%" }}>
@@ -187,25 +226,9 @@ function SchoolView() {
             </List>
             <Divider />
             <List>
-                <ListItemButton sx={{ color: "white" }}>
-                    <ListItemIcon sx={{ color: "white" }}>
-                        <Feedback />
-                    </ListItemIcon>
-                    <ListItemText primary="Contact us" />
-                </ListItemButton>
+               
             </List>
-            <Typography
-                sx={{
-                    backgroundColor: "blue",
-                    color: "white",
-                    borderRadius: 10,
-                    textAlign: "center",
-                    padding: 1,
-                    margin: 2,
-                }}
-            >
-                Sign In
-            </Typography>
+         
         </div>
     );
 
@@ -257,7 +280,7 @@ function SchoolView() {
                     mt: 8, // Adjust margin top to create space for the app bar
                 }}
             >
-                <Grid container spacing={1} justifyContent="center">
+                      <Grid container spacing={1} justifyContent="center">
                     <Grid item xs={12} sm={8}>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
                             <TextField
@@ -270,9 +293,13 @@ function SchoolView() {
                             <IconButton color="primary" onClick={() => setSearchTerm("")}>
                                 <Clear />
                             </IconButton>
+                            <Button variant="contained" color="primary" onClick={generatePDF}>
+                                Generate PDF
+                            </Button>
                         </Box>
-                        <TableContainer component={Paper}>
+                        <TableContainer component={Paper} id="table-to-pdf" height="250" border="300px" borderRadius="2px">
                             <Table>
+               
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>ID</TableCell>
@@ -293,6 +320,9 @@ function SchoolView() {
                                             <TableCell>{school. number_females}</TableCell>
 
                                             <TableCell>
+                                            <IconButton component={Link} to={`/editSchool/${school.id}`} color="primary">
+                                                    <Edit />
+                                                </IconButton>
                                                 <IconButton color="error" onClick={() => deleteSchool(school.id)}>
                                                     <DeleteIcon />
                                                 </IconButton>

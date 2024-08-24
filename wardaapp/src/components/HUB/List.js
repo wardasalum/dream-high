@@ -101,6 +101,8 @@ function Hublist() {
 
 
     // // Delete hub
+    
+    
     const deleteHub = async (id) => {
         // Ask for confirmation before deleting
         const isConfirmed = window.confirm("Are you sure you want to delete this hub?");
@@ -109,7 +111,7 @@ function Hublist() {
             try {
                 // Perform the delete operation
                 await axios.delete(`http://localhost:8080/hub/${id}`);
-                // Reload categories after deletion
+                // Reload after deletion
                 loadHubs();
             } catch (error) {
                 // Handle errors here (e.g., show an error message to the user)
@@ -238,18 +240,7 @@ const handleToggle = () => {
             </List>
             <Divider />
 
-            <Typography
-                sx={{
-                    backgroundColor: "blue",
-                    color: "white",
-                    borderRadius: 10,
-                    textAlign: "center",
-                    padding: 1,
-                    margin: 2,
-                }}
-            >
-                Sign In
-            </Typography>
+            
         </div>
     );
 
